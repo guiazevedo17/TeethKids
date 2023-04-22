@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "315319518921",
+    "project_id": "teethkids-d10a1",
+    "storage_bucket": "teethkids-d10a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315319518921:android:33836494582320a1832f18",
+        "android_client_info": {
+          "package_name": "com.kids.teeth.dentista"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315319518921-q7ujir036hhb9bmrdp9hdnofelncsvoh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlJmuSpRikuESHGHaXS4EX4yPM-ZfMw0o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315319518921-q7ujir036hhb9bmrdp9hdnofelncsvoh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
