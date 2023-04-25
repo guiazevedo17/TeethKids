@@ -1,4 +1,4 @@
-package com.kids.teeth.dentista
+package com.kids.teeth.dentista.activity
 
 import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
@@ -6,14 +6,14 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.kids.teeth.dentista.R
 
-class MainActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity(R.layout.activity_sign_up) {
 
     private val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
     }
 
     override fun onResume() {

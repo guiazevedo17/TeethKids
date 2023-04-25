@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".fragments.SignUpFragment">
+
+        <!-- Nome Completo -->
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etNameSignUp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/complete_name"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- E-mail -->
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etEmailSignUp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:hint="@string/email"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@id/etNameSignUp"
+            app:layout_constraintStart_toStartOf="@id/etNameSignUp"
+            app:layout_constraintTop_toBottomOf="@id/etNameSignUp" />
+
+        <!-- Senha -->
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etPasswordSignUp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:hint="@string/password"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@id/etNameSignUp"
+            app:layout_constraintStart_toStartOf="@id/etNameSignUp"
+            app:layout_constraintTop_toBottomOf="@id/etEmailSignUp" />
+
+        <!-- Confirmar Senha -->
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etConfPasswordSignUp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:hint="@string/conf_password"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@id/etNameSignUp"
+            app:layout_constraintStart_toStartOf="@id/etNameSignUp"
+            app:layout_constraintTop_toBottomOf="@id/etPasswordSignUp" />
+
+        <!-- Endereço -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAddressSignUp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/address"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@id/btnResumeSignUp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etConfPasswordSignUp" />
+
+        <!-- Currículo -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnResumeSignUp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="80dp"
+            android:text="@string/resume"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnAddressSignUp"
+            app:layout_constraintTop_toBottomOf="@id/etConfPasswordSignUp" />
+
+        <!-- CONCLUIR -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnConcludeSignUp"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="@string/conclude"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
