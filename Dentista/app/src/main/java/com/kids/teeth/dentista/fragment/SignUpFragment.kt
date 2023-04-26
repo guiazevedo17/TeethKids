@@ -58,15 +58,18 @@ class SignUpFragment : Fragment() {
 
     private fun register() {
         val fieldName = binding.etNameSignUp
+        val fieldPhone = binding.etPhoneSignUp
         val fieldEmail = binding.etEmailSignUp
         val fieldPassword = binding.etPasswordSignUp
 
         val name = fieldName.text.toString()
+        val phone = fieldPhone.text.toString()
         val email = fieldEmail.text.toString()
         val password = fieldPassword.text.toString()
 
         val dentist = hashMapOf(
             "name" to name,
+            "phone" to phone,
             "email" to email,
             "password" to password
         )

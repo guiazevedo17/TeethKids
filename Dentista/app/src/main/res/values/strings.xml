@@ -8,6 +8,7 @@
 
     <!-- Sign Up | Cadastro de Dentista -->
     <string name="complete_name">Nome Completo</string>
+    <string name="phone">Telefone</string>
     <string name="email">E-mail</string>
     <string name="password">Senha</string>
     <string name="conf_password">Confirmar Senha</string>
