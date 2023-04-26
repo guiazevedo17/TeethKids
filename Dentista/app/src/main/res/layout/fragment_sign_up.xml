@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".fragments.SignUpFragment">
+        tools:context=".fragment.SignUpFragment">
 
         <!-- Nome Completo -->
         <androidx.appcompat.widget.AppCompatEditText
@@ -38,16 +38,25 @@
             app:layout_constraintTop_toBottomOf="@id/etNameSignUp" />
 
         <!-- Senha -->
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etPasswordSignUp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ilPasswordSignUp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:hint="@string/password"
             android:textAlignment="center"
+            app:endIconMode="password_toggle"
             app:layout_constraintEnd_toEndOf="@id/etNameSignUp"
             app:layout_constraintStart_toStartOf="@id/etNameSignUp"
-            app:layout_constraintTop_toBottomOf="@id/etEmailSignUp" />
+            app:layout_constraintTop_toBottomOf="@id/etEmailSignUp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPasswordSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Confirmar Senha -->
         <androidx.appcompat.widget.AppCompatEditText
@@ -59,7 +68,7 @@
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="@id/etNameSignUp"
             app:layout_constraintStart_toStartOf="@id/etNameSignUp"
-            app:layout_constraintTop_toBottomOf="@id/etPasswordSignUp" />
+            app:layout_constraintTop_toBottomOf="@id/ilPasswordSignUp" />
 
         <!-- Endereço -->
         <androidx.appcompat.widget.AppCompatButton

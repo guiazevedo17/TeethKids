@@ -4,35 +4,20 @@ import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.navigation.findNavController
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.kids.teeth.dentista.R
+import com.kids.teeth.dentista.databinding.ActivitySignUpBinding
 
-class SignUpActivity : AppCompatActivity(R.layout.activity_sign_up) {
+class SignUpActivity : AppCompatActivity(R.layout.fragment_sign_up) {
 
-    private val db = Firebase.firestore
+    private lateinit var binding: ActivitySignUpBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    }
 
-    override fun onResume() {
-        super.onResume()
-
-        val user = hashMapOf(
-            "first" to "Guilherme",
-            "last" to "Azevedo",
-            "born" to 2001
-        )
-
-        // Add a new document with a generated ID
-        db.collection("users")
-            .add(user)
-            .addOnSuccessListener { documentReference ->
-                Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.w(ContentValues.TAG, "Error adding document", e)
-            }
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 }
