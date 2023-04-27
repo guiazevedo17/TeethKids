@@ -15,6 +15,12 @@
     <string name="resume">Currículo</string>
     <string name="address">Endereço</string>
 
+    <!-- AddressListFragment -->
+    <string name="fragment_title_address_list">Lista de Endereços</string>
+
+    <!-- AddressRegisterFragment -->
+    <string name="fragment_title_address_register">Cadastro de Endereço</string>
+
     <!-- Address Register | Cadastro de Endereço -->
     <string name="postal_code">CEP</string>
     <string name="street">Rua</string>
@@ -23,5 +29,6 @@
     <string name="neighborhood">Bairro</string>
     <string name="city">Cidade</string>
     <string name="state">Estado</string>
+
 
 </resources>

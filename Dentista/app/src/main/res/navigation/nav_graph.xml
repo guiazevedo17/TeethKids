@@ -10,8 +10,29 @@
         android:name="com.kids.teeth.dentista.fragment.SignUpFragment"
         android:label="@string/fragment_title_sign_up"
         tools:layout="@layout/fragment_sign_up">
+
+        <action
+            android:id="@+id/action_SignUpFragment_to_AddressListFragment"
+            app:destination="@id/AddressListFragment"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/AddressListFragment"
+        android:name="com.kids.teeth.dentista.fragment.AddressListFragment"
+        android:label="@string/fragment_title_address_list"
+        tools:layout="@layout/fragment_address_list">
+
+        <action
+            android:id="@+id/action_AddressListFragment_to_AddressRegisterFragment"
+            app:destination="@id/AddressRegisterFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/AddressRegisterFragment"
+        android:name="com.kids.teeth.dentista.fragment.AddressRegisterFragment"
+        android:label="@string/fragment_title_address_register"
+        tools:layout="@layout/fragment_address_register">
+    </fragment>
 
 </navigation>
 
