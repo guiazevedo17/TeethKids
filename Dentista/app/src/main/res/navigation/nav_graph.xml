@@ -5,6 +5,23 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/SignUpFragment">
 
+    <!-- Login Dentista -->
+    <fragment
+        android:id="@+id/SignInFragment"
+        android:name="com.kids.teeth.dentista.fragment.SignInFragment"
+        android:label="@string/fragment_title_sign_up"
+        tools:layout="@layout/fragment_sign_up">
+
+        <action
+            android:id="@+id/action_SignUpFragment_to_AddressListFragment"
+            app:destination="@id/AddressListFragment"/>
+
+        <action
+            android:id="@+id/action_SignUpFragment_to_ResumeFragment"
+            app:destination="@id/ResumeFragment"/>
+    </fragment>
+
+    <!-- Cadastrar Dentista -->
     <fragment
         android:id="@+id/SignUpFragment"
         android:name="com.kids.teeth.dentista.fragment.SignUpFragment"
@@ -14,8 +31,20 @@
         <action
             android:id="@+id/action_SignUpFragment_to_AddressListFragment"
             app:destination="@id/AddressListFragment"/>
+
+        <action
+            android:id="@+id/action_SignUpFragment_to_ResumeFragment"
+            app:destination="@id/ResumeFragment"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/ResumeFragment"
+        android:name="com.kids.teeth.dentista.fragment.ResumeFragment"
+        android:label="@string/fragment_title_resume"
+        tools:layout="@layout/fragment_resume">
+    </fragment>
+
+    <!-- Lista de Endereços -->
     <fragment
         android:id="@+id/AddressListFragment"
         android:name="com.kids.teeth.dentista.fragment.AddressListFragment"
@@ -27,6 +56,7 @@
             app:destination="@id/AddressRegisterFragment"/>
     </fragment>
 
+    <!-- Cadastro de Endereço -->
     <fragment
         android:id="@+id/AddressRegisterFragment"
         android:name="com.kids.teeth.dentista.fragment.AddressRegisterFragment"

@@ -10,7 +10,7 @@ import com.google.firebase.ktx.Firebase
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.databinding.ActivitySignUpBinding
 
-class SignUpActivity : AppCompatActivity(R.layout.fragment_sign_up) {
+class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
 

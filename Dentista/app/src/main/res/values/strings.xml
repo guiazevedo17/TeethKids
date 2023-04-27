@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Dentista</string>
 
+    <string name="login">Entrar</string>
+
     <string name="conclude">Concluir</string>
 
     <!-- SignUpFragment -->
@@ -14,6 +16,10 @@
     <string name="conf_password">Confirmar Senha</string>
     <string name="resume">Currículo</string>
     <string name="address">Endereço</string>
+
+    <!-- Resume Fragment -->
+    <string name="fragment_title_resume">Currículo</string>
+    <string name="resume_register">Escreva aqui seu currículo</string>
 
     <!-- AddressListFragment -->
     <string name="fragment_title_address_list">Lista de Endereços</string>
@@ -29,6 +35,8 @@
     <string name="neighborhood">Bairro</string>
     <string name="city">Cidade</string>
     <string name="state">Estado</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

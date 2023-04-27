@@ -170,7 +170,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="50dp"
             android:background="@color/white"
-            android:drawableEnd="@drawable/ic_cloud_upload"
+            android:drawableEnd="@drawable/ic_cv"
             android:padding="10dp"
             android:text="@string/resume"
             android:textAllCaps="false"

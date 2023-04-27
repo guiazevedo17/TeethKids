@@ -45,6 +45,10 @@ class SignUpFragment : Fragment() {
             findNavController().navigate(R.id.action_SignUpFragment_to_AddressListFragment)
         }
 
+        binding.btnResumeSignUp.setOnClickListener {
+            findNavController().navigate(R.id.action_SignUpFragment_to_ResumeFragment)
+        }
+
         binding.btnConcludeSignUp.setOnClickListener {
             //register()
         }
