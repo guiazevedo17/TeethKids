@@ -37,6 +37,7 @@
             app:destination="@id/ResumeFragment"/>
     </fragment>
 
+    <!-- Preencher Currículo -->
     <fragment
         android:id="@+id/ResumeFragment"
         android:name="com.kids.teeth.dentista.fragment.ResumeFragment"

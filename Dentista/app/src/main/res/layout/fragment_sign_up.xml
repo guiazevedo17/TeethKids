@@ -34,6 +34,14 @@
             android:layout_marginEnd="20dp"
             android:hint="@string/complete_name"
             android:textColorHint="@color/tk_blue"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/tk_blue"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="3dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivProfilePicture">
@@ -42,7 +50,6 @@
                 android:id="@+id/etNameSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:textColor="@color/tk_blue" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -58,6 +65,14 @@
             android:layout_marginEnd="20dp"
             android:hint="@string/phone"
             android:textColorHint="@color/tk_blue"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/tk_blue"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="3dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ilNameSignUp">
@@ -66,7 +81,6 @@
                 android:id="@+id/etPhoneSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:inputType="phone"
                 android:textColor="@color/tk_blue" />
 
@@ -82,6 +96,14 @@
             android:layout_marginTop="30dp"
             android:hint="@string/email"
             android:textColorHint="@color/tk_blue"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/tk_blue"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="3dp"
             app:layout_constraintEnd_toEndOf="@id/ilNameSignUp"
             app:layout_constraintStart_toStartOf="@id/ilNameSignUp"
             app:layout_constraintTop_toBottomOf="@id/ilPhoneSignUp">
@@ -90,7 +112,6 @@
                 android:id="@+id/etEmailSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/tk_blue" />
 
@@ -105,6 +126,14 @@
             android:layout_marginTop="30dp"
             android:hint="@string/password"
             android:textColorHint="@color/tk_blue"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/tk_blue"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="3dp"
             app:endIconMode="password_toggle"
             app:layout_constraintEnd_toEndOf="@id/ilNameSignUp"
             app:layout_constraintStart_toStartOf="@id/ilNameSignUp"
@@ -114,7 +143,6 @@
                 android:id="@+id/etPasswordSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:inputType="textPassword"
                 android:textColor="@color/tk_blue" />
 
@@ -129,6 +157,14 @@
             android:layout_marginTop="30dp"
             android:hint="@string/conf_password"
             android:textColorHint="@color/tk_blue"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/tk_blue"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="3dp"
             app:endIconMode="password_toggle"
             app:layout_constraintEnd_toEndOf="@id/ilNameSignUp"
             app:layout_constraintStart_toStartOf="@id/ilNameSignUp"
@@ -138,7 +174,6 @@
                 android:id="@+id/etConfPasswordSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:inputType="textPassword"
                 android:textColor="@color/tk_blue" />
 
