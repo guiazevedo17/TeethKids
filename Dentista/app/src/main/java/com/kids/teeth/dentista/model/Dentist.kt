@@ -1,6 +1,13 @@
 package com.kids.teeth.dentista.model
 
-data class Dentist(
-    val id: Any,
-    val nome: Any
+import com.google.firebase.firestore.DocumentId
+
+class Dentist(
+
+    @DocumentId
+    val id: String? = null,
+    val uid: String? = null,
+
+    val nome: String? = null,
+
     )

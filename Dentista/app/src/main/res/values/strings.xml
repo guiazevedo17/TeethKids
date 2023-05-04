@@ -5,6 +5,9 @@
 
     <string name="conclude">Concluir</string>
 
+    <!-- SignInFragment -->
+    <string name="not_signed">Ainda não possui conta?</string>
+
     <!-- SignUpFragment -->
     <string name="fragment_title_sign_up">Criar Conta</string>
 

@@ -10,7 +10,7 @@
         android:id="@+id/SignInFragment"
         android:name="com.kids.teeth.dentista.fragment.SignInFragment"
         android:label="@string/fragment_title_sign_up"
-        tools:layout="@layout/fragment_sign_up">
+        tools:layout="@layout/fragment_sign_in">
 
         <action
             android:id="@+id/action_SignInFragment_to_SignUpFragment"
@@ -31,6 +31,12 @@
         <action
             android:id="@+id/action_SignUpFragment_to_ResumeFragment"
             app:destination="@id/ResumeFragment"/>
+
+        <argument
+            android:name="resumeRegistered"
+            app:argType="string"
+            android:defaultValue="Invalido" />
+
     </fragment>
 
     <!-- Preencher Currículo -->
@@ -39,6 +45,10 @@
         android:name="com.kids.teeth.dentista.fragment.ResumeFragment"
         android:label="@string/fragment_title_resume"
         tools:layout="@layout/fragment_resume">
+
+        <action
+            android:id="@+id/action_ResumeFragment_to_SignUpFragment"
+            app:destination="@id/SignUpFragment"/>
     </fragment>
 
     <!-- Lista de Endereços -->
@@ -59,6 +69,10 @@
         android:name="com.kids.teeth.dentista.fragment.AddressRegisterFragment"
         android:label="@string/fragment_title_address_register"
         tools:layout="@layout/fragment_address_register">
+
+        <action
+            android:id="@+id/action_AddressRegisterFragment_to_AddressListFragment"
+            app:destination="@id/AddressListFragment"/>
     </fragment>
 
 </navigation>

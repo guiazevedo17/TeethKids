@@ -1,12 +1,19 @@
 package com.kids.teeth.dentista.model
 
+import com.google.firebase.firestore.DocumentId
+
 data class Address(
-    val name: Any,
-    val code: Any,
-    val street: Any,
-    val number: Any,
-    val complement: Any,
-    val neighborhood: Any,
-    val city: Any,
-    val state: Any
+    /*
+    @DocumentId
+    var id: String? = null,
+    var uid: String? = null,
+     */
+    var name: String? = null,
+    var code: String? = null,
+    var street: String? = null,
+    var number: String? = null,
+    var complement: String? = null,
+    var neighborhood: String? = null,
+    var city: String? = null,
+    var state: String? = null
     )
