@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tk_grey"
+    tools:context=".fragment.ProfileFragment">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivProfilePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="15dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_person"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNameProfile"
+        android:text="Jaiminho"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:textColor="@color/white"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/btnEditProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivProfilePicture" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnEditProfile"
+        android:text="@string/edit"
+        android:textColor="@color/tk_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/tvStatusProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNameProfile" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvStatusProfile"
+        android:text="@string/status"
+        android:paddingEnd="10dp"
+        android:layout_marginStart="100dp"
+        android:textColor="@color/tk_blue"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/btnAddressProfile"
+        app:layout_constraintEnd_toStartOf="@id/scStatusProfile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnEditProfile" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/scStatusProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="100dp"
+        app:layout_constraintBottom_toTopOf="@id/btnAddressProfile"
+        app:layout_constraintStart_toEndOf="@id/tvStatusProfile"
+        app:layout_constraintTop_toBottomOf="@id/btnEditProfile"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAddressProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:background="@color/tk_blue"
+        android:paddingHorizontal="30dp"
+        android:text="@string/address"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/btnEmergenciesProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvStatusProfile" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnEmergenciesProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/tk_blue"
+        android:paddingHorizontal="30dp"
+        android:text="@string/emergencies"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/btnReputationProfile"
+        app:layout_constraintEnd_toEndOf="@id/btnAddressProfile"
+        app:layout_constraintStart_toStartOf="@id/btnAddressProfile"
+        app:layout_constraintTop_toBottomOf="@id/btnAddressProfile" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnReputationProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/tk_blue"
+        android:paddingHorizontal="30dp"
+        android:text="@string/reputation"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/btnRankProfile"
+        app:layout_constraintEnd_toEndOf="@id/btnAddressProfile"
+        app:layout_constraintStart_toStartOf="@id/btnAddressProfile"
+        app:layout_constraintTop_toBottomOf="@id/btnEmergenciesProfile" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnRankProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/tk_blue"
+        android:paddingHorizontal="30dp"
+        android:text="@string/rank"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/btnAddressProfile"
+        app:layout_constraintStart_toStartOf="@id/btnAddressProfile"
+        app:layout_constraintTop_toBottomOf="@id/btnReputationProfile" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

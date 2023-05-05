@@ -51,7 +51,7 @@ class SignInFragment : Fragment() {
 
             auth.signInWithEmailAndPassword(Email,Password).addOnCompleteListener { login ->
                 if (login.isSuccessful) {
-                    findNavController().navigate(R.id.action_SignInFragment_to_SignUpFragment)
+                    findNavController().navigate(R.id.action_SignInFragment_to_ProfileFragment)
                 }
                 else {
                     val snackbar = Snackbar.make(view, "Email ou senha incorretos!", Snackbar.LENGTH_SHORT)

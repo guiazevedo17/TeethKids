@@ -39,6 +39,13 @@
     <string name="city">Cidade</string>
     <string name="state">Estado</string>
 
+    <!-- ProfileFragment -->
+    <string name="fragment_title_profile">Perfil</string>
+    <string name="edit">Editar</string>
+    <string name="status">Meus Status</string>
+    <string name="emergencies">Emergências</string>
+    <string name="reputation">Minha Reputação</string>
+    <string name="rank">Solicitar Avaliação</string>
 
 
 </resources>

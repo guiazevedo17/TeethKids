@@ -13,6 +13,10 @@
         tools:layout="@layout/fragment_sign_in">
 
         <action
+            android:id="@+id/action_SignInFragment_to_ProfileFragment"
+            app:destination="@id/ProfileFragment" />
+
+        <action
             android:id="@+id/action_SignInFragment_to_SignUpFragment"
             app:destination="@id/SignUpFragment" />
     </fragment>
@@ -73,6 +77,25 @@
         <action
             android:id="@+id/action_AddressRegisterFragment_to_AddressListFragment"
             app:destination="@id/AddressListFragment"/>
+    </fragment>
+
+    <!-- Perfil -->
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.kids.teeth.dentista.fragment.ProfileFragment"
+        android:label="@string/fragment_title_profile"
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_ProfileFragment_to_EditProfileFragment"/>
+        <action
+            android:id="@+id/action_ProfileFragment_to_AddressListFragment"/>
+        <action
+            android:id="@+id/action_ProfileFragment_to_EmergenciesFragment"/>
+        <action
+            android:id="@+id/action_ProfileFragment_to_ReputationFragment"/>
+        <action
+            android:id="@+id/action_ProfileFragment_to_RankFragment"/>
     </fragment>
 
 </navigation>
