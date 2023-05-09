@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/SignInFragment">
+
+    <!-- Login Dentista -->
+    <fragment
+        android:id="@+id/SignInFragment"
+        android:name="com.kids.teeth.dentista.fragment.SignInFragment"
+        android:label="@string/fragment_title_sign_up"
+        tools:layout="@layout/fragment_sign_in">
+
+        <action
+            android:id="@+id/action_SignInFragment_to_ProfileFragment"
+            app:destination="@id/ProfileFragment" />
+
+        <action
+            android:id="@+id/action_SignInFragment_to_SignUpFragment"
+            app:destination="@id/SignUpFragment" />
+    </fragment>
+
+    <!-- Cadastrar Dentista -->
+    <fragment
+        android:id="@+id/SignUpFragment"
+        android:name="com.kids.teeth.dentista.fragment.SignUpFragment"
+        android:label="@string/fragment_title_sign_up"
+        tools:layout="@layout/fragment_sign_up">
+
+        <action
+            android:id="@+id/action_SignUpFragment_to_AddressListFragment"
+            app:destination="@id/AddressListFragment"/>
+
+        <action
+            android:id="@+id/action_SignUpFragment_to_ResumeFragment"
+            app:destination="@id/ResumeFragment"/>
+
+        <argument
+            android:name="resumeRegistered"
+            app:argType="string"
+            android:defaultValue="Invalido" />
+
+    </fragment>
+
+    <!-- Preencher Currículo -->
+    <fragment
+        android:id="@+id/ResumeFragment"
+        android:name="com.kids.teeth.dentista.fragment.ResumeFragment"
+        android:label="@string/fragment_title_resume"
+        tools:layout="@layout/fragment_resume">
+
+        <action
+            android:id="@+id/action_ResumeFragment_to_SignUpFragment"
+            app:destination="@id/SignUpFragment"/>
+    </fragment>
+
+    <!-- Lista de Endereços -->
+    <fragment
+        android:id="@+id/AddressListFragment"
+        android:name="com.kids.teeth.dentista.fragment.AddressListFragment"
+        android:label="@string/fragment_title_address_list"
+        tools:layout="@layout/fragment_address_list">
+
+        <action
+            android:id="@+id/action_AddressListFragment_to_AddressRegisterFragment"
+            app:destination="@id/AddressRegisterFragment"/>
+    </fragment>
+
+    <!-- Cadastro de Endereço -->
+    <fragment
+        android:id="@+id/AddressRegisterFragment"
+        android:name="com.kids.teeth.dentista.fragment.AddressRegisterFragment"
+        android:label="@string/fragment_title_address_register"
+        tools:layout="@layout/fragment_address_register">
+
+        <action
+            android:id="@+id/action_AddressRegisterFragment_to_AddressListFragment"
+            app:destination="@id/AddressListFragment"/>
+    </fragment>
+
+    <!-- Perfil -->
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.kids.teeth.dentista.fragment.ProfileFragment"
+        android:label="@string/fragment_title_profile"
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_ProfileFragment_to_EditProfileFragment"/>
+        <action
+            android:id="@+id/action_ProfileFragment_to_AddressListFragment"/>
+        <action
+            android:id="@+id/action_ProfileFragment_to_EmergenciesFragment"/>
+        <action
+            android:id="@+id/action_ProfileFragment_to_ReputationFragment"/>
+        <action
+            android:id="@+id/action_ProfileFragment_to_RankFragment"/>
+    </fragment>
+
+</navigation>
+

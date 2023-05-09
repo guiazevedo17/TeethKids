@@ -1,3 +1,51 @@
 <resources>
     <string name="app_name">Dentista</string>
+
+    <string name="login">Entrar</string>
+
+    <string name="conclude">Concluir</string>
+
+    <!-- SignInFragment -->
+    <string name="not_signed">Ainda não possui conta?</string>
+
+    <!-- SignUpFragment -->
+    <string name="fragment_title_sign_up">Criar Conta</string>
+
+    <!-- Sign Up | Cadastro de Dentista -->
+    <string name="complete_name">Nome Completo</string>
+    <string name="phone">Telefone</string>
+    <string name="email">E-mail</string>
+    <string name="password">Senha</string>
+    <string name="conf_password">Confirmar Senha</string>
+    <string name="resume">Currículo</string>
+    <string name="address">Endereço</string>
+
+    <!-- Resume Fragment -->
+    <string name="fragment_title_resume">Currículo</string>
+
+    <!-- AddressListFragment -->
+    <string name="fragment_title_address_list">Lista de Endereços</string>
+
+    <!-- AddressRegisterFragment -->
+    <string name="fragment_title_address_register">Cadastro de Endereço</string>
+
+    <!-- Address Register | Cadastro de Endereço -->
+    <string name="address_name">Nome</string>
+    <string name="postal_code">CEP</string>
+    <string name="street">Rua</string>
+    <string name="number">Número</string>
+    <string name="complement">Complemento</string>
+    <string name="neighborhood">Bairro</string>
+    <string name="city">Cidade</string>
+    <string name="state">Estado</string>
+
+    <!-- ProfileFragment -->
+    <string name="fragment_title_profile">Perfil</string>
+    <string name="edit">Editar</string>
+    <string name="status">Meus Status</string>
+    <string name="emergencies">Emergências</string>
+    <string name="reputation">Minha Reputação</string>
+    <string name="rank">Solicitar Avaliação</string>
+
+
 </resources>
