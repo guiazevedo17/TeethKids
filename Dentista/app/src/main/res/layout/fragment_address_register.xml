@@ -7,6 +7,35 @@
     android:background="@color/tk_grey"
     tools:context=".fragment.AddressRegisterFragment">
 
+    <!-- Barra Topo -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tbAddressRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tk_blue"
+        android:padding="15dp"
+        android:text="@string/fragment_title_address_register"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/ilName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Voltar -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ibtnBackAddressRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:background="@null"
+        android:paddingVertical="15dp"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- Nome do Endereço -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ilName"
@@ -14,7 +43,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="70dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:hint="@string/address_name"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
@@ -25,7 +54,7 @@
         app:boxStrokeWidthFocused="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/tbAddressRegister">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
@@ -40,7 +69,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:hint="@string/postal_code"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
@@ -66,7 +95,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:hint="@string/street"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
@@ -92,7 +121,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:hint="@string/number"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
@@ -118,7 +147,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:hint="@string/complement"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
@@ -144,7 +173,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:hint="@string/neighborhood"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
@@ -170,7 +199,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:hint="@string/city"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
@@ -196,7 +225,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:hint="@string/state"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"

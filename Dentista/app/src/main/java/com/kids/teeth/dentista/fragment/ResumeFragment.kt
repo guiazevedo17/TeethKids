@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.databinding.FragmentResumeBinding
-
 
 class ResumeFragment : Fragment() {
 
@@ -32,8 +32,12 @@ class ResumeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.ibtnBackResume.setOnClickListener{
+            findNavController().navigate(R.id.action_ResumeFragment_to_SignUpFragment)
+        }
+
         binding.btnConcludeResume.setOnClickListener {
-            val resume = binding.etResumeRegister.text.toString()
+            val resume = binding.etResume.text.toString()
 
             val direction = ResumeFragmentDirections.actionResumeFragmentToSignUpFragment()
 

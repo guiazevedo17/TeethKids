@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.dao.AddressesDao
 import com.kids.teeth.dentista.databinding.FragmentAddressRegisterBinding
 import com.kids.teeth.dentista.model.Address
@@ -33,20 +33,19 @@ class AddressRegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.ibtnBackAddressRegister.setOnClickListener {
+            findNavController().navigate(R.id.action_AddressRegisterFragment_to_AddressesListFragment)
+        }
+
         binding.btnConcludeAddressRegister.setOnClickListener {
 
             val newAddress = createAddress()
 
-            val direction = AddressRegisterFragmentDirections.actionAddressRegisterFragmentToAddressListFragment()
-
             AddressesDao.add(newAddress)
 
-            findNavController().navigate(direction)
-
-            Toast.makeText(requireContext(),"AddressRegisterFragment onViewCreated() - ${AddressesDao.searchAll()}", Toast.LENGTH_LONG).show()
-
-            cleanFields()
-
+            findNavController().navigate(R.id.action_AddressRegisterFragment_to_AddressesListFragment)
+            println("teste botao")
+            //clearFields()
         }
     }
 
@@ -64,7 +63,7 @@ class AddressRegisterFragment : Fragment() {
         )
     }
 
-    private fun cleanFields(){
+    private fun clearFields(){
         binding.etName.setText("")
         binding.etPostalCode.setText("")
         binding.etStreet.setText("")

@@ -6,6 +6,7 @@
     <string name="conclude">Concluir</string>
 
     <!-- SignInFragment -->
+    <string name="fragment_title_sign_in">Teeth Kids</string>
     <string name="not_signed">Ainda não possui conta?</string>
 
     <!-- SignUpFragment -->
@@ -21,7 +22,7 @@
     <string name="address">Endereço</string>
 
     <!-- Resume Fragment -->
-    <string name="fragment_title_resume">Currículo</string>
+    <string name="fragment_title_resume">Adicionar Currículo</string>
 
     <!-- AddressListFragment -->
     <string name="fragment_title_address_list">Lista de Endereços</string>
@@ -43,9 +44,15 @@
     <string name="fragment_title_profile">Perfil</string>
     <string name="edit">Editar</string>
     <string name="status">Meus Status</string>
+    <string name="addresses">Endereços</string>
     <string name="emergencies">Emergências</string>
     <string name="reputation">Minha Reputação</string>
     <string name="rank">Solicitar Avaliação</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- EditProfileFragment -->
+    <string name="fragment_title_edit_profile">Editar Perfil</string>
 
 
 </resources>

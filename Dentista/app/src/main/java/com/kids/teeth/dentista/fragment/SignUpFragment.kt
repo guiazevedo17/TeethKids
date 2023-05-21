@@ -56,8 +56,12 @@ class SignUpFragment : Fragment(){
 
         super.onViewCreated(view, savedInstanceState)
 
+        binding.ibtnBackSignUp.setOnClickListener {
+            findNavController().navigate(R.id.action_SignUpFragment_to_SignInFragment)
+        }
+
         binding.btnAddressSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_SignUpFragment_to_AddressListFragment)
+            findNavController().navigate(R.id.action_SignUpFragment_to_AddressesListFragment)
         }
 
         binding.btnResumeSignUp.setOnClickListener {
@@ -82,7 +86,8 @@ class SignUpFragment : Fragment(){
                             snackbar.setBackgroundTint(Color.BLUE)
                             snackbar.show()
                             registerAccount(Name,Phone,Email,Password,Resume,AddressesDao.searchAll())
-                            clearFields()
+
+                            findNavController().navigate(R.id.action_SignUpFragment_to_SignInFragment)
                         }
                     }
                 }

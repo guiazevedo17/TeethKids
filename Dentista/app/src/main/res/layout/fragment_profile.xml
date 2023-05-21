@@ -7,68 +7,111 @@
     android:background="@color/tk_grey"
     tools:context=".fragment.ProfileFragment">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivProfilePicture"
-        android:layout_width="wrap_content"
+    <!-- Barra Topo -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tbProfile"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="15dp"
-        android:padding="10dp"
-        android:src="@drawable/ic_person"
+        android:background="@color/tk_blue"
+        android:padding="15dp"
+        android:text="@string/fragment_title_profile"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Sair -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ibtnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:background="@null"
+        android:paddingVertical="15dp"
+        android:src="@drawable/ic_logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Foto de Perfil -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivProfilePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@drawable/ic_person"
+        app:layout_constraintBottom_toTopOf="@id/tvNameProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tbProfile" />
+
+    <!-- Nome -->
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvNameProfile"
-        android:text="Jaiminho"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:textSize="30dp"
-        android:textColor="@color/white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/btnEditProfile"
+        android:text="Jaiminho"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/ivStatusFeedback"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivProfilePicture" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnEditProfile"
-        android:text="@string/edit"
-        android:textColor="@color/tk_blue"
+    <!-- Feedback Status -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivStatusFeedback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/tvStatusProfile"
+        android:src="@drawable/ic_status_on"
+        app:layout_constraintBottom_toTopOf="@id/btnEditProfile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvNameProfile" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvStatusProfile"
-        android:text="@string/status"
-        android:paddingEnd="10dp"
-        android:layout_marginStart="100dp"
-        android:textColor="@color/tk_blue"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:textAlignment="center"
+    <!-- Editar Perfil -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnEditProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/btnAddressProfile"
-        app:layout_constraintEnd_toStartOf="@id/scStatusProfile"
+        android:background="@null"
+        android:drawableEnd="@drawable/ic_edit"
+        android:drawablePadding="7dp"
+        android:padding="10dp"
+        android:text="@string/edit"
+        android:textColor="@color/tk_blue"
+        app:layout_constraintBottom_toTopOf="@id/scStatusProfile"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnEditProfile" />
+        app:layout_constraintTop_toBottomOf="@id/ivStatusFeedback" />
 
+
+    <!-- Toogle Status -->
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/scStatusProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="100dp"
+        android:checked="true"
+        android:gravity="center"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:text="@string/status"
+        android:textColor="@color/tk_blue"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp"
+        android:theme="@style/switchButton"
         app:layout_constraintBottom_toTopOf="@id/btnAddressProfile"
-        app:layout_constraintStart_toEndOf="@id/tvStatusProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnEditProfile"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:track="@drawable/bg_track" />
 
+
+    <!-- Endereços -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAddressProfile"
         android:layout_width="0dp"
@@ -76,14 +119,16 @@
         android:layout_marginHorizontal="30dp"
         android:background="@color/tk_blue"
         android:paddingHorizontal="30dp"
-        android:text="@string/address"
+        android:text="@string/addresses"
         android:textAllCaps="false"
         android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@id/btnEmergenciesProfile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvStatusProfile" />
+        app:layout_constraintTop_toBottomOf="@id/scStatusProfile" />
 
+    <!-- Emergências -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnEmergenciesProfile"
         android:layout_width="0dp"
@@ -93,11 +138,13 @@
         android:text="@string/emergencies"
         android:textAllCaps="false"
         android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@id/btnReputationProfile"
         app:layout_constraintEnd_toEndOf="@id/btnAddressProfile"
         app:layout_constraintStart_toStartOf="@id/btnAddressProfile"
         app:layout_constraintTop_toBottomOf="@id/btnAddressProfile" />
 
+    <!-- Minha Reputação -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnReputationProfile"
         android:layout_width="0dp"
@@ -107,13 +154,15 @@
         android:text="@string/reputation"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/btnRankProfile"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/btnRequestFeedbackProfile"
         app:layout_constraintEnd_toEndOf="@id/btnAddressProfile"
         app:layout_constraintStart_toStartOf="@id/btnAddressProfile"
         app:layout_constraintTop_toBottomOf="@id/btnEmergenciesProfile" />
 
+    <!-- Solicitar Avaliação -->
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnRankProfile"
+        android:id="@+id/btnRequestFeedbackProfile"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/tk_blue"
@@ -121,10 +170,10 @@
         android:text="@string/rank"
         android:textAllCaps="false"
         android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/btnAddressProfile"
         app:layout_constraintStart_toStartOf="@id/btnAddressProfile"
         app:layout_constraintTop_toBottomOf="@id/btnReputationProfile" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

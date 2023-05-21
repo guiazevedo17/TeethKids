@@ -1,6 +1,5 @@
 package com.kids.teeth.dentista.recyclerview.adapter
 
-
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.model.Address
 
-class AddressListAdapter(
+class AddressesListAdapter(
     addresses: List<Address>
-    ) : ListAdapter<Address, AddressListAdapter.AddressViewHolder>(AddressDiffCallBack) {
+    ) : ListAdapter<Address, AddressesListAdapter.AddressViewHolder>(AddressDiffCallBack) {
 
     private val addresses = addresses.toMutableList()
 

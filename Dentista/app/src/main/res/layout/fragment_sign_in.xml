@@ -7,16 +7,33 @@
     android:background="@color/tk_grey"
     tools:context=".fragment.SignInFragment">
 
+    <!-- Top Bar -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tbSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tk_blue"
+        android:padding="15dp"
+        android:text="@string/fragment_title_sign_in"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/ivLogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- Logo -->
     <ImageView
         android:id="@+id/ivLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="60dp"
+        android:layout_marginTop="60dp"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tbSignIn" />
 
     <!-- E-mail -->
     <com.google.android.material.textfield.TextInputLayout
@@ -25,7 +42,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
         android:hint="@string/email"
         android:textColorHint="@color/tk_blue"
         app:boxBackgroundColor="@color/white"
@@ -85,20 +102,20 @@
         android:id="@+id/btnLogin"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:layout_marginBottom="15dp"
         android:background="@color/tk_blue"
-        android:layout_marginTop="60dp"
         android:text="@string/login"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/ilPasswordSignIn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ilPasswordSignIn" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvNotSigned"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="30dp"
+        android:layout_marginTop="40dp"
         android:text="@string/not_signed"
         android:textAlignment="center"
         android:textColor="@color/tk_blue"
@@ -114,6 +131,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/fragment_title_sign_up"
+        android:textStyle="bold"
+        android:background="@null"
         android:textColor="@color/tk_blue"
         app:layout_constraintEnd_toEndOf="@id/tvNotSigned"
         app:layout_constraintStart_toStartOf="@id/tvNotSigned"
