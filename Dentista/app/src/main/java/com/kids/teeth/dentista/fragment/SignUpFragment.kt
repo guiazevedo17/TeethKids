@@ -56,10 +56,6 @@ class SignUpFragment : Fragment(){
 
         super.onViewCreated(view, savedInstanceState)
 
-        binding.ibtnBackSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_SignUpFragment_to_SignInFragment)
-        }
-
         binding.btnAddressSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_SignUpFragment_to_AddressesListFragment)
         }
@@ -85,9 +81,12 @@ class SignUpFragment : Fragment(){
                             val snackbar = Snackbar.make(view, "Sucesso ao cadastrar usuario!", Snackbar.LENGTH_SHORT)
                             snackbar.setBackgroundTint(Color.BLUE)
                             snackbar.show()
-                            registerAccount(Name,Phone,Email,Password,Resume,AddressesDao.searchAll())
-
-                            findNavController().navigate(R.id.action_SignUpFragment_to_SignInFragment)
+                            val uid = auth.currentUser?.uid
+                            if (uid != null) {
+                                registerAccount(Name,Phone,Email,Password,Resume,AddressesDao.searchAll(), uid,false)
+                                findNavController().navigate(R.id.action_SignUpFragment_to_SignInFragment)
+                            }
+                            clearFields()
                         }
                     }
                 }
@@ -136,7 +135,7 @@ class SignUpFragment : Fragment(){
         return true
     }
 
-    private fun registerAccount(Name: String, Phone: String, Email: String, Password: String, Resume: String, Addresses: List<Address>) {
+    private fun registerAccount(Name: String, Phone: String, Email: String, Password: String, Resume: String, Addresses: List<Address>, Uid: String, Availability: Boolean) {
 
         val dentist = hashMapOf(
             "name" to Name,
@@ -144,16 +143,18 @@ class SignUpFragment : Fragment(){
             "email" to Email,
             "password" to Password,
             "resume" to Resume,
-            "addresses" to Addresses
+            "addresses" to Addresses,
+            "availability" to Availability
         )
 
-        db.collection("dentists")
-            .add(dentist)
+        val userDocument = db.collection("dentists").document(Uid!!)
+
+        userDocument.set(dentist)
             .addOnSuccessListener { documentReference ->
-                Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+
             }
             .addOnFailureListener { e ->
-                Log.w(ContentValues.TAG, "Error adding document", e)
+
             }
 
     }

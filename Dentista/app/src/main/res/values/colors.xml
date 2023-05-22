@@ -17,4 +17,12 @@
         name="mtrl_textinput_default_box_stroke_color"
         tools:override="true">#0061A8</color>
 
+    <!-- Accept -->
+    <color name="accept_emergency">#70D75F</color>
+    <color name="accept_emergency_text">#216C15</color>
+
+    <!-- Decline -->
+    <color name="decline_emergency">#ED6767</color>
+    <color name="decline_emergency_text">#7E1515</color>
+
 </resources>

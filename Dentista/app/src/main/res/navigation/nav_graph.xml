@@ -112,11 +112,14 @@
             android:id="@+id/action_ProfileFragment_to_AddressesListFragment"
             app:destination="@+id/AddressesListFragment"/>
         <action
-            android:id="@+id/action_ProfileFragment_to_EmergenciesListFragment"/>
+            android:id="@+id/action_ProfileFragment_to_EmergenciesListFragment"
+            app:destination="@id/EmergenciesListFragment"/>
         <action
-            android:id="@+id/action_ProfileFragment_to_ReputationFragment"/>
+            android:id="@+id/action_ProfileFragment_to_ReputationFragment"
+            app:destination="@id/ReputationProfileFragment"/>
         <action
-            android:id="@+id/action_ProfileFragment_to_RequestFeedbackFragment"/>
+            android:id="@+id/action_ProfileFragment_to_RequestFeedbackFragment"
+            app:destination="@id/RequestFeedbackFragment"/>
     </fragment>
 
     <!-- Editar Perfil -->
@@ -142,31 +145,47 @@
         <action
             android:id="@+id/action_EmergenciesListFragment_to_ProfileFragment"
             app:destination="@id/ProfileFragment"/>
+
+        <action
+            android:id="@+id/action_EmergenciesListFragment_to_EmergenciesHistoricFragment"
+            app:destination="@id/EmergenciesHistoricFragment"/>
     </fragment>
 
-    <!-- Minha Reputação
+    <!-- Histórico de Emergências -->
     <fragment
-        android:id="@+id/ReputationFragment"
-        android:name="com.kids.teeth.dentista.fragment.ReputationFragment"
+        android:id="@+id/EmergenciesHistoricFragment"
+        android:name="com.kids.teeth.dentista.fragment.EmergenciesHistoricFragment"
+        android:label="@string/fragment_emergencies_historic"
+        tools:layout="@layout/fragment_emergencies_historic">
+
+        <action
+            android:id="@+id/action_EmergenciesHistoricFragment_to_EmergenciesListFragment"
+            app:destination="@id/EmergenciesListFragment"/>
+    </fragment>
+
+    <!-- Minha Reputação -->
+    <fragment
+        android:id="@+id/ReputationProfileFragment"
+        android:name="com.kids.teeth.dentista.fragment.ReputationProfileFragment"
         android:label="@string/reputation"
-        tools:layout="@layout/fragment_reputation">
+        tools:layout="@layout/fragment_reputation_profile">
 
         <action
-            android:id="@+id/action_ReputationFragment_to_ProfileFragment"
+            android:id="@+id/action_ReputationProfileFragment_to_ProfileFragment"
             app:destination="@id/ProfileFragment"/>
-    </fragment>-->
+    </fragment>
 
-    <!-- Solicitar Avaliação
+    <!-- Solicitar Avaliação -->
     <fragment
-        android:id="@+id/FeedbackFragment"
-        android:name="com.kids.teeth.dentista.fragment.FeedbackFragment"
-        android:label="@string/feedback"
-        tools:layout="@layout/fragment_feedback">
+        android:id="@+id/RequestFeedbackFragment"
+        android:name="com.kids.teeth.dentista.fragment.RequestFeedbackFragment"
+        android:label="@string/rank"
+        tools:layout="@layout/fragment_request_feedback">
 
         <action
-            android:id="@+id/action_FeedbackFragment_to_ProfileFragment"
+            android:id="@+id/action_RequestFeedbackFragment_to_ProfileFragment"
             app:destination="@id/ProfileFragment"/>
-    </fragment>-->
+    </fragment>
 
 </navigation>
 

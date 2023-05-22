@@ -4,28 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.EmergenciesListFragment">
+    tools:context=".fragment.RequestFeedbackFragment">
 
     <!-- Barra Topo -->
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tbEmergenciesList"
+        android:id="@+id/tbRequestFeedbackProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/tk_blue"
         android:padding="15dp"
-        android:text="@string/emergencies"
+        android:text="@string/rank"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/rvEmergenciesList"
+        app:layout_constraintBottom_toTopOf="@id/rvRequestFeedbackProfile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Voltar -->
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/ibtnBackEmergenciesList"
+        android:id="@+id/ibtnBackRequestFeedbackProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -36,28 +36,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvEmergenciesList"
+        android:id="@+id/rvRequestFeedbackProfile"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@id/tbEmergenciesList"
-        app:layout_constraintBottom_toTopOf="@id/btnEmergenciesHistoric"
-        tools:listitem="@layout/emergency_card" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnEmergenciesHistoric"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rvEmergenciesList"
+        app:layout_constraintTop_toBottomOf="@id/tbRequestFeedbackProfile"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/fragment_emergencies_historic"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:padding="10sp"
-        android:layout_marginTop="15dp"
-        android:background="@color/tk_blue"
-        android:layout_marginBottom="15dp"/>
+        tools:listitem="@layout/emergency_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

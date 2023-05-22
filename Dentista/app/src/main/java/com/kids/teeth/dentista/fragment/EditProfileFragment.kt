@@ -1,10 +1,12 @@
 package com.kids.teeth.dentista.fragment
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,6 +40,7 @@ class EditProfileFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         db = FirebaseFirestore.getInstance(Firebase.app)
+        auth = FirebaseAuth.getInstance(Firebase.app)
 
         recoverData(db)
     }
@@ -48,6 +51,13 @@ class EditProfileFragment : Fragment() {
         binding.ibtnBackEditProfile.setOnClickListener {
             findNavController().navigate(R.id.action_EditProfileFragment_to_ProfileFragment)
         }
+
+        val btnBorder = GradientDrawable()
+        btnBorder.setColor(ContextCompat.getColor(requireContext(), R.color.tk_blue))
+        btnBorder.setStroke(6, ContextCompat.getColor(requireContext(),R.color.tk_blue))
+        btnBorder.cornerRadius = 30f
+
+        binding.btnConcludeEditProfile.background = btnBorder
     }
 
     private fun recoverData(db : FirebaseFirestore){
@@ -66,6 +76,8 @@ class EditProfileFragment : Fragment() {
                     val password = document.getString("password")
                     val resume = document.getString("resume")
 
+                    println(name)
+
                     binding.etNameEditProfile.setText(name)
                     binding.etPhoneEditProfile.setText(phone)
                     binding.etEmailEditProfile.setText(email)
@@ -74,6 +86,8 @@ class EditProfileFragment : Fragment() {
                 }
 
         }
+
+        println("recoverData()")
 
     }
 

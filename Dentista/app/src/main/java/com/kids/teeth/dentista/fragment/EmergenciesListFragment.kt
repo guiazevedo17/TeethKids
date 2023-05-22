@@ -1,5 +1,6 @@
 package com.kids.teeth.dentista.fragment
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -39,9 +42,21 @@ class EmergenciesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.ibtnEmergenciesList.setOnClickListener {
+        binding.ibtnBackEmergenciesList.setOnClickListener {
             findNavController().navigate(R.id.action_EmergenciesListFragment_to_ProfileFragment)
         }
+
+        val btnBorder = GradientDrawable()
+        btnBorder.setColor(ContextCompat.getColor(requireContext(), R.color.tk_blue))
+        btnBorder.setStroke(6, ContextCompat.getColor(requireContext(),R.color.tk_blue))
+        btnBorder.cornerRadius = 30f
+
+        binding.btnEmergenciesHistoric.background = btnBorder
+
+        binding.btnEmergenciesHistoric.setOnClickListener {
+            findNavController().navigate(R.id.action_EmergenciesListFragment_to_EmergenciesHistoricFragment)
+        }
+
     }
 
     override fun onStart() {
@@ -50,7 +65,7 @@ class EmergenciesListFragment : Fragment() {
         //loadEmergenciesFirestore()
     }
 
-//    fun loadEmergenciesFirestore(){
+//    private fun loadEmergenciesFirestore(){
 //        val db = FirebaseFirestore.getInstance(Firebase.app)
 //        var contact: Emergency
 //        db.collection("emergencies")

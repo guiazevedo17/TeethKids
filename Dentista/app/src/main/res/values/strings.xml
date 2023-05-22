@@ -30,6 +30,9 @@
     <!-- AddressRegisterFragment -->
     <string name="fragment_title_address_register">Cadastro de Endereço</string>
 
+    <!-- EditAddressFragment -->
+    <string name="fragment_title_edit_address">Editar Endereço</string>
+
     <!-- Address Register | Cadastro de Endereço -->
     <string name="address_name">Nome</string>
     <string name="postal_code">CEP</string>
@@ -48,11 +51,14 @@
     <string name="emergencies">Emergências</string>
     <string name="reputation">Minha Reputação</string>
     <string name="rank">Solicitar Avaliação</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- EditProfileFragment -->
     <string name="fragment_title_edit_profile">Editar Perfil</string>
+
+    <!-- EmergenciesListFragment -->
+    <string name="fragment_emergencies_historic">Histórico de Emergências</string>
+    <string name="accept">Aceitar</string>
+    <string name="decline">Recusar</string>
 
 
 </resources>
