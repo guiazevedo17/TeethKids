@@ -60,5 +60,9 @@
     <string name="accept">Aceitar</string>
     <string name="decline">Recusar</string>
 
+    <!-- DefaultMessageService -->
+    <string name="default_notification_channel_id" translatable="false">canal_padrao</string>
+    <string name="fcm_default_title_message" translatable="false">Mensagem</string>
+
 
 </resources>

@@ -11,15 +11,19 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.app
+import com.google.firebase.messaging.ktx.messaging
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.dao.AddressesDao
 import com.kids.teeth.dentista.databinding.FragmentSignUpBinding
 import com.kids.teeth.dentista.model.Address
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
 
 
 class SignUpFragment : Fragment(){
@@ -28,7 +32,7 @@ class SignUpFragment : Fragment(){
     private val binding: FragmentSignUpBinding get() = _binding!!
 
     private lateinit var db: FirebaseFirestore
-
+    private lateinit var functions: FirebaseFunctions
     private lateinit var auth: FirebaseAuth
 
     private val arguments by navArgs<SignUpFragmentArgs>()
@@ -83,7 +87,7 @@ class SignUpFragment : Fragment(){
                             snackbar.show()
                             val uid = auth.currentUser?.uid
                             if (uid != null) {
-                                registerAccount(Name,Phone,Email,Password,Resume,AddressesDao.searchAll(), uid,false)
+                                storeFcmToken(Name,Phone,Email,Password,Resume,uid)
                                 findNavController().navigate(R.id.action_SignUpFragment_to_SignInFragment)
                             }
                             clearFields()
@@ -135,7 +139,10 @@ class SignUpFragment : Fragment(){
         return true
     }
 
-    private fun registerAccount(Name: String, Phone: String, Email: String, Password: String, Resume: String, Addresses: List<Address>, Uid: String, Availability: Boolean) {
+    private fun registerAccount(Name: String, Phone: String, Email: String, Password: String, Resume: String, Addresses: List<Address>, Uid: String, Availability: Boolean,Fcmtoken: String) {
+
+        functions = Firebase.functions("southamerica-east1")
+
 
         val dentist = hashMapOf(
             "name" to Name,
@@ -144,8 +151,15 @@ class SignUpFragment : Fragment(){
             "password" to Password,
             "resume" to Resume,
             "addresses" to Addresses,
-            "availability" to Availability
+            "availability" to Availability,
+            "fcmToken" to Fcmtoken
         )
+
+        functions.getHttpsCallable("setUser")
+            .call(dentist)
+            .addOnSuccessListener { result ->
+                val resposta :String? = result.data.toString()
+            }
 
         val userDocument = db.collection("dentists").document(Uid!!)
 
@@ -159,6 +173,17 @@ class SignUpFragment : Fragment(){
 
     }
 
+    private fun storeFcmToken(Name: String, Phone: String, Email: String, Password: String, Resume: String,Uid: String){
+        Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+            // guardar esse token.
+            var fcmToken = task.result
+            registerAccount(Name,Phone,Email,Password,Resume,AddressesDao.searchAll(), Uid,false,fcmToken)
+
+        })
+    }
 
 
 }
