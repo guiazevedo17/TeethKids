@@ -71,8 +71,7 @@ class EditProfileFragment : Fragment() {
 
                 if(fieldNotNull(Name, Phone, Email, Password, PasswordConfirm, Resume)){
                     updateData(Name,Phone,Email,Password,Resume)
-                    requireActivity().supportFragmentManager.popBackStack()
-                    clearFields()
+                    findNavController().navigate(R.id.action_EditProfileFragment_to_ProfileFragment)
                     val snackbar = Snackbar.make(view, "Sucesso ao cadastrar usuario!", Snackbar.LENGTH_SHORT)
                     snackbar.setBackgroundTint(Color.BLUE)
                     snackbar.show()

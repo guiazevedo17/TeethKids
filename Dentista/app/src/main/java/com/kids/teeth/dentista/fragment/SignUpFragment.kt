@@ -171,16 +171,6 @@ class SignUpFragment : Fragment(){
                 val resposta :String? = result.data.toString()
             }
 
-        val userDocument = db.collection("dentists").document(Uid!!)
-
-        userDocument.set(dentist)
-            .addOnSuccessListener { documentReference ->
-
-            }
-            .addOnFailureListener { e ->
-
-            }
-
     }
 
     private fun storeFcmToken(Name: String, Phone: String, Email: String, Password: String, Resume: String,Uid: String){

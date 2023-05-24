@@ -93,7 +93,6 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val flag:Boolean = false
 
         (activity as AppCompatActivity).supportActionBar?.apply {
             setIcon(R.drawable.ic_logout)
