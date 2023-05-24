@@ -37,9 +37,6 @@ class RequestFeedbackFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.ibtnBackRequestFeedbackProfile.setOnClickListener {
-            findNavController().navigate(R.id.action_RequestFeedbackFragment_to_ProfileFragment)
-        }
     }
 
 }

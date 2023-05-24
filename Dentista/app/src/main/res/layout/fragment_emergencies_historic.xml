@@ -6,41 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".fragment.EmergenciesHistoricFragment">
 
-    <!-- Barra Topo -->
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tbEmergenciesHistoric"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/tk_blue"
-        android:padding="15dp"
-        android:text="@string/fragment_emergencies_historic"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/rvEmergenciesHistoric"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Voltar -->
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/ibtnBackEmergenciesHistoric"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:background="@null"
-        android:paddingVertical="15dp"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvEmergenciesHistoric"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@id/tbEmergenciesHistoric"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/emergency_card" />
 

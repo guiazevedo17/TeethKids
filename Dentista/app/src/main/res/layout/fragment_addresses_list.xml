@@ -6,41 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".fragment.AddressesListFragment">
 
-    <!-- Barra Topo -->
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tbAddressList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/tk_blue"
-        android:padding="15dp"
-        android:text="@string/fragment_title_address_list"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/rvAddressList"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Voltar -->
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/ibtnBackAddressList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:background="@null"
-        android:paddingVertical="15dp"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAddressList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@id/tbAddressList"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/address_card" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

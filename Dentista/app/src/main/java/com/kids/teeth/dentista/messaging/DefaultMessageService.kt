@@ -11,7 +11,6 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.activity.SignInActivity
-import com.kids.teeth.dentista.fragment.EmergenciesListFragment
 
 class DefaultMessageService : FirebaseMessagingService() {
 
@@ -36,7 +35,7 @@ class DefaultMessageService : FirebaseMessagingService() {
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_check)
+            .setSmallIcon(R.drawable.logo)
             .setContentTitle(getString(R.string.fcm_default_title_message))
             .setContentText(messageBody)
             .setAutoCancel(true)

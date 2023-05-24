@@ -33,18 +33,13 @@ class AddressRegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.ibtnBackAddressRegister.setOnClickListener {
-            findNavController().navigate(R.id.action_AddressRegisterFragment_to_AddressesListFragment)
-        }
-
         binding.btnConcludeAddressRegister.setOnClickListener {
 
             val newAddress = createAddress()
 
             AddressesDao.add(newAddress)
 
-            findNavController().navigate(R.id.action_AddressRegisterFragment_to_AddressesListFragment)
-            println("teste botao")
+            findNavController().popBackStack()
             //clearFields()
         }
     }

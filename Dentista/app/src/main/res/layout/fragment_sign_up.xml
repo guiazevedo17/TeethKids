@@ -12,35 +12,6 @@
         android:background="@color/tk_grey"
         tools:context=".fragment.SignUpFragment">
 
-        <!-- Top Bar -->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tbSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/tk_blue"
-            android:padding="15dp"
-            android:text="@string/fragment_title_sign_up"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/ivProfilePictureSignUp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Voltar -->
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/ibtnBackSignUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:background="@null"
-            android:paddingVertical="15dp"
-            android:src="@drawable/ic_arrow_back"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <!-- Foto de Perfil -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivProfilePictureSignUp"
@@ -50,7 +21,7 @@
             android:src="@drawable/profile_pic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tbSignUp"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <!-- Nome Completo -->
         <com.google.android.material.textfield.TextInputLayout

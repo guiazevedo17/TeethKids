@@ -42,9 +42,8 @@ class EmergenciesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.ibtnBackEmergenciesList.setOnClickListener {
-            findNavController().navigate(R.id.action_EmergenciesListFragment_to_ProfileFragment)
-        }
+        Log.d("EmergenciesListFragment", "Binding is null: ${binding == null}")
+
 
         val btnBorder = GradientDrawable()
         btnBorder.setColor(ContextCompat.getColor(requireContext(), R.color.tk_blue))
@@ -54,7 +53,9 @@ class EmergenciesListFragment : Fragment() {
         binding.btnEmergenciesHistoric.background = btnBorder
 
         binding.btnEmergenciesHistoric.setOnClickListener {
-            findNavController().navigate(R.id.action_EmergenciesListFragment_to_EmergenciesHistoricFragment)
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, EmergenciesHistoricFragment())
+                .commit()
         }
 
     }

@@ -5,9 +5,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -57,8 +60,12 @@ class SignUpFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
+
+        val activity = requireActivity() as AppCompatActivity
+        val toolbar = activity.findViewById<Toolbar>(R.id.toolbar)
+        activity.setSupportActionBar(toolbar)
+
 
         binding.btnAddressSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_SignUpFragment_to_AddressesListFragment)
@@ -110,7 +117,10 @@ class SignUpFragment : Fragment(){
 
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
 
+    }
 
     // Limpa os campos
     private fun clearFields(){

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
@@ -68,20 +69,35 @@ class ProfileFragment : Fragment() {
                 try {
                     val document = db.collection("dentists").document(user.uid).get().await()
                     val currentAvailability = document.getBoolean("availability")
-                    println(currentAvailability)
                     if (currentAvailability != null) {
                         binding.scStatusProfile.isChecked = currentAvailability
                     }
+                    setImageStatus(currentAvailability)
                 } catch (e: Exception) {
                     // Trate qualquer exceção que possa ocorrer ao buscar os dados
                     e.printStackTrace()
                 }
             }
+
+        }
+    }
+
+    private fun setImageStatus(availability: Boolean?) {
+        if (availability == true) {
+            binding.ivStatusFeedback.setImageResource(R.drawable.ic_status_on)
+        } else {
+            binding.ivStatusFeedback.setImageResource(R.drawable.ic_status_off)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val flag:Boolean = false
+
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            setIcon(R.drawable.ic_logout)
+        }
 
         val editBorder = GradientDrawable()
         editBorder.setColor(Color.TRANSPARENT)
@@ -104,12 +120,10 @@ class ProfileFragment : Fragment() {
         binding.btnReputationProfile.background = btnBorder
         binding.btnRequestFeedbackProfile.background = btnBorder
 
-        binding.scStatusProfile.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                binding.ivStatusFeedback.setImageResource(R.drawable.ic_status_on)
-            } else {
-                binding.ivStatusFeedback.setImageResource(R.drawable.ic_status_off)
-            }
+        binding.scStatusProfile.setOnClickListener {
+            val isChecked = binding.scStatusProfile.isChecked
+
+            setImageStatus(isChecked)
 
             auth.currentUser?.let { user ->
                 db.collection("dentists").document(user.uid).get()
@@ -124,11 +138,6 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        binding.ibtnLogout.setOnClickListener {
-            auth.signOut()
-            findNavController().navigate(R.id.action_ProfileFragment_to_SignInFragment)
-        }
-
         binding.btnEditProfile.setOnClickListener {
             findNavController().navigate(R.id.action_ProfileFragment_to_EditProfileFragment)
         }
@@ -136,8 +145,6 @@ class ProfileFragment : Fragment() {
         binding.btnAddressProfile.setOnClickListener { // Endereços
 
             val direction = ProfileFragmentDirections.actionProfileFragmentToAddressesListFragment()
-
-            direction.loggedIn = true
 
             findNavController().navigate(direction)
         }
@@ -152,6 +159,14 @@ class ProfileFragment : Fragment() {
 
         binding.btnRequestFeedbackProfile.setOnClickListener { // Solicitar Avaliação
             findNavController().navigate(R.id.action_ProfileFragment_to_RequestFeedbackFragment)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            setDisplayShowHomeEnabled(false)
         }
     }
 

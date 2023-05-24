@@ -77,10 +77,6 @@
         <action
             android:id="@+id/action_AddressesListFragment_to_ProfileFragment"
             app:destination="@id/ProfileFragment"/>
-        <argument
-            android:name="loggedIn"
-            app:argType="boolean"
-            android:defaultValue="false" />
     </fragment>
 
     <!-- Cadastro de Endereço -->
