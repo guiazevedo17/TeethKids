@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">Dentista</string>
+    <string name="app_name">Teeth Kids</string>
 
     <string name="login">Entrar</string>
 
     <string name="conclude">Concluir</string>
 
     <!-- SignInFragment -->
-    <string name="fragment_title_sign_in">Teeth Kids</string>
+    <string name="fragment_title_sign_in">Login</string>
     <string name="not_signed">Ainda não possui conta?</string>
 
     <!-- SignUpFragment -->

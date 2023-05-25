@@ -62,11 +62,6 @@ class SignUpFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val activity = requireActivity() as AppCompatActivity
-        val toolbar = activity.findViewById<Toolbar>(R.id.toolbar)
-        activity.setSupportActionBar(toolbar)
-
-
         binding.btnAddressSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_SignUpFragment_to_AddressesListFragment)
         }
@@ -114,11 +109,6 @@ class SignUpFragment : Fragment(){
             }
             //register()
         }
-
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
 
     }
 

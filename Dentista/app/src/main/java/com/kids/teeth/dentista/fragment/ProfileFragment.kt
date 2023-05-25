@@ -6,6 +6,9 @@ import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -37,8 +40,8 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProfileBinding.inflate(
-                inflater, container, false
-            )
+            inflater, container, false
+        )
         return binding.root
     }
 
@@ -55,9 +58,9 @@ class ProfileFragment : Fragment() {
             val uid = currentUser.uid
 
             db.collection("dentists").document(uid).get().addOnSuccessListener { document ->
-                    val name = document.getString("name")
-                    binding.tvNameProfile.setText(name)
-                }
+                val name = document.getString("name")
+                binding.tvNameProfile.setText(name)
+            }
         }
     }
 
@@ -93,10 +96,6 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            setIcon(R.drawable.ic_logout)
-        }
 
         val editBorder = GradientDrawable()
         editBorder.setColor(Color.TRANSPARENT)
@@ -164,8 +163,23 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            setDisplayShowHomeEnabled(false)
+    }
+
+    @Deprecated("Deprecated")
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.profile_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    @Deprecated("Deprecated")
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.btnLogout -> {
+                auth.signOut()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
