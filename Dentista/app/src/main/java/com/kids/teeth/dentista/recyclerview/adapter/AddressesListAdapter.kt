@@ -11,11 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.model.Address
 
-class AddressesListAdapter(
-    addresses: List<Address>
+class AddressesListAdapter(private val dataSet: List<Address>
     ) : ListAdapter<Address, AddressesListAdapter.AddressViewHolder>(AddressDiffCallBack) {
-
-    private val addresses = addresses.toMutableList()
 
     class AddressViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val name : AppCompatTextView = view.findViewById(R.id.tvAddressName)
@@ -28,17 +25,16 @@ class AddressesListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder {
-        Log.d("AddressListAdapter","onCreateViewHolder")
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.address_card,parent,false)
         return AddressViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
-        val a = addresses[position]
+        val a = dataSet[position]
         holder.bind(a)
     }
 
-    override fun getItemCount(): Int = addresses.size
+    override fun getItemCount(): Int = dataSet.size
 }
 
 object AddressDiffCallBack : DiffUtil.ItemCallback<Address>() {

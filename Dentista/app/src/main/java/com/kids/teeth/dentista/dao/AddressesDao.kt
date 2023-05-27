@@ -12,4 +12,8 @@ object AddressesDao {
     fun searchAll(): List<Address> {
         return addresses
     }
+
+    fun clearAll() {
+        addresses.clear()
+    }
 }

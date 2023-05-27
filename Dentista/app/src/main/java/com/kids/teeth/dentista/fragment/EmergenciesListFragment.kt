@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.app
@@ -27,7 +29,8 @@ class EmergenciesListFragment : Fragment() {
 
     val emergencies = ArrayList<Emergency>()
 
-    private val adapter : EmergenciesListAdapter = EmergenciesListAdapter(emergencies)
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter : EmergenciesListAdapter
 
 
     override fun onCreateView(
@@ -47,6 +50,11 @@ class EmergenciesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        recyclerView = binding.rvEmergenciesList
+        adapter = EmergenciesListAdapter(emergencies)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         Log.d("EmergenciesListFragment", "Binding is null: ${binding == null}")
 
@@ -76,20 +84,23 @@ class EmergenciesListFragment : Fragment() {
         val db = FirebaseFirestore.getInstance(Firebase.app)
         var emergency: Emergency
 
-        db.collection("emergencies")
+        db.collection("teste_emergencia")
             .get()
             .addOnSuccessListener { querySnapshot ->
                 querySnapshot.forEach { document ->
-                    //Log.d("ContactsList", "Contato ID ${document.id}")
+                    val name = document.data["name"] as? String
 
-                     emergency = Emergency(
-                        document.data["name"] as String
-                    )
+                    if (name != null) {
+                        emergency = Emergency(name)
 
-                    emergencies.add(emergency)
+                        emergencies.add(emergency)
+                        adapter.notifyDataSetChanged()
+                    } else{
+                        Log.w("EmergenciesList", "Emergency name is null!")
+                    }
+
                 }
                 // notificamos que o adapter foi alterado. Com isso recyclerview atualizará os dados
-                adapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
                 Log.w("EmergenciesList", "Error getting documents $exception")

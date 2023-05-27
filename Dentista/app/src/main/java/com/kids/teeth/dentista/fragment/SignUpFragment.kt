@@ -90,6 +90,7 @@ class SignUpFragment : Fragment(){
                             val uid = auth.currentUser?.uid
                             if (uid != null) {
                                 storeFcmToken(Name,Phone,Email,Password,Resume,uid)
+                                AddressesDao.clearAll()
                                 findNavController().navigate(R.id.action_SignUpFragment_to_SignInFragment)
                             }
                             clearFields()
