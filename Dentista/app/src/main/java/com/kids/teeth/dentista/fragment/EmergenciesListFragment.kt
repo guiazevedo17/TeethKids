@@ -17,12 +17,18 @@ import com.google.firebase.ktx.app
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.databinding.FragmentEmergenciesListBinding
 import com.kids.teeth.dentista.model.Emergency
+import com.kids.teeth.dentista.recyclerview.adapter.EmergenciesListAdapter
 
 
 class EmergenciesListFragment : Fragment() {
 
     private var _binding : FragmentEmergenciesListBinding? = null
     private val binding : FragmentEmergenciesListBinding get() = _binding!!
+
+    val emergencies = ArrayList<Emergency>()
+
+    private val adapter : EmergenciesListAdapter = EmergenciesListAdapter(emergencies)
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,30 +69,31 @@ class EmergenciesListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        //loadEmergenciesFirestore()
+        loadEmergenciesFirestore()
     }
 
-//    private fun loadEmergenciesFirestore(){
-//        val db = FirebaseFirestore.getInstance(Firebase.app)
-//        var contact: Emergency
-//        db.collection("emergencies")
-//            .get()
-//            .addOnSuccessListener { querySnapshot ->
-//                querySnapshot.forEach { document ->
-//                    Log.d("ContactsList", "Contato ID ${document.id}")
-//
-//                    emergency = Emergency(
-//                        document.data["requesterName"],
-//                        document.data["requesterPhone"])
-//
-//                    allContacts.add(emergency)
-//                }
-//                // notificamos que o adapter foi alterado. Com isso recyclerview atualizará os dados
-//                contactsAdapter.notifyDataSetChanged()
-//            }
-//            .addOnFailureListener { exception ->
-//                Log.w("EmergenciesList", "Error getting documents $exception")
-//            }
-//    }
+    private fun loadEmergenciesFirestore(){
+        val db = FirebaseFirestore.getInstance(Firebase.app)
+        var emergency: Emergency
+
+        db.collection("emergencies")
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                querySnapshot.forEach { document ->
+                    //Log.d("ContactsList", "Contato ID ${document.id}")
+
+                     emergency = Emergency(
+                        document.data["name"] as String
+                    )
+
+                    emergencies.add(emergency)
+                }
+                // notificamos que o adapter foi alterado. Com isso recyclerview atualizará os dados
+                adapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                Log.w("EmergenciesList", "Error getting documents $exception")
+            }
+    }
 
 }

@@ -20,7 +20,7 @@ class EmergenciesListAdapter(private val dataSet: List<Emergency>) :
 
         fun bind(e: Emergency) {
             currentEmergency = e
-            requesterName.text = e.requesterName.toString()
+            requesterName.text = e.name.toString()
         }
     }
 
@@ -44,6 +44,6 @@ object EmergencyDiffCallback : DiffUtil.ItemCallback<Emergency>() {
     }
 
     override fun areContentsTheSame(oldItem: Emergency, newItem: Emergency): Boolean {
-        return oldItem.requesterName.toString() == newItem.requesterName.toString()
+        return oldItem.name.toString() == newItem.name.toString()
     }
 }
