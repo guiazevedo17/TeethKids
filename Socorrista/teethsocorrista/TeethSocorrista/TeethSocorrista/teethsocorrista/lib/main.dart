@@ -1,21 +1,60 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
 
+//imports do firebase
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+//import do firebase auth
+import 'package:firebase_auth/firebase_auth.dart';
+
+//import do firebase storage
+import 'package:firebase_storage/firebase_storage.dart';
 
 final List<CameraDescription> camerasList = [];
+
+class Globals{
+  static UserCredential? userCredential;
+  static List<String> imagesPath = [];
+  static List<String> downloadURL = [];
+  static String? fcmToken = '';
+}
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   final cameras = await availableCameras();
   camerasList.add(cameras[0]);
 
+  Globals.userCredential = await FirebaseAuth.instance.signInAnonymously();
+  Globals.fcmToken = await FirebaseMessaging.instance.getToken();
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print('Message data: ${message.data}');
+
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
+  });
+
+
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -28,7 +67,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Identificacao(), // Definindo a tela inicial
+      home: AbrirChamado(), // Definindo a tela inicial
     );
   }
 }
@@ -36,6 +75,7 @@ class MyApp extends StatelessWidget {
 class Identificacao extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     const appTitle = 'Solicitar socorro imediato';
     return MaterialApp(
       title: appTitle,
@@ -49,6 +89,68 @@ class Identificacao extends StatelessWidget {
         ),
         body: MyCustomForm(),
       ),
+    );
+  }
+}
+class AbrirChamado extends StatelessWidget{
+
+  Future<bool> checkDocument() async {
+    final db = FirebaseFirestore.instance;
+    final docRef = db.collection('emergencies').doc(Globals.userCredential?.user?.uid);
+    final docSnapshot = await docRef.get();
+    final exists = docSnapshot.exists;
+    return exists;
+  }
+
+  Future<void> iniciarColecao() async{
+   final db = FirebaseFirestore.instance;
+   final id = Globals.userCredential?.user?.uid; 
+   final user = <String, dynamic>{
+     "userId": Globals.userCredential?.user?.uid,
+     "fcmToken": Globals.fcmToken,
+     "state": 'invalid'
+   };
+
+   db.collection('emergencies').doc(id).set(user).whenComplete(() =>  print('Documento Iniciado com sucesso') );
+
+  }
+
+  @override
+  Widget build(BuildContext context){
+    const appTittle = 'TeethKids - Socorrista';
+
+    void IniciarIdentificacao() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Identificacao()),
+      );
+    }
+    return MaterialApp(
+        title: appTittle,
+        home:Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text(appTittle),
+            backgroundColor: Color.fromARGB(255, 255, 140, 0),
+          ),
+          body: Center(
+            child: ElevatedButton(
+              onPressed:() async{
+
+                bool docExists = await checkDocument();
+                if(!docExists){
+                  await iniciarColecao();
+                }
+                  IniciarIdentificacao();
+              },
+              child: Text('Iniciar Chamado'),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 255, 140, 0)
+              ),
+
+            ),
+          ),
+        )
     );
   }
 }
@@ -74,8 +176,48 @@ class FirstRoute extends StatelessWidget {
 }
 
 class MyCustomForm extends StatelessWidget {
+
+
+  Future<void> uploadImage(List<String> imagePaths) async {
+    try {
+
+      final storage = FirebaseStorage.instance;
+
+      for (String path in imagePaths){
+        File imageFile = File(path);
+        final storageRef = storage.ref().child('${DateTime.now().toIso8601String()}.jpg');
+        await storageRef.putFile(imageFile);
+        final downloadURL =  await storageRef.getDownloadURL();
+        Globals.downloadURL.add(downloadURL);
+      }
+      Globals.imagesPath.clear();
+      print('Imagem enviada com sucesso');
+    } catch (e) {
+
+      print('Error $e');
+    }
+  }
+  Future<void> updateColecao(String nomeController, String telefoneController) async {
+    final db = FirebaseFirestore.instance;
+    final id = Globals.userCredential?.user?.uid;
+
+    if (id != null) {
+      Map<String, dynamic> update = {
+        'name': nomeController,
+        'phone': telefoneController,
+        'images': Globals.downloadURL,
+      };
+
+      await db.collection('emergencies').doc(id).set(update, SetOptions(merge: true));
+      await db.collection('emergencies').doc(id).update({'state':'new'});
+    } else {
+      print('ID do usuário é nulo');
+    }
+  }
   @override
   Widget build(BuildContext context) {
+    final nomeController = TextEditingController();
+    final telefoneController = TextEditingController();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -83,6 +225,7 @@ class MyCustomForm extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: TextFormField(
             autofocus: true,
+            controller: nomeController,
             decoration: const InputDecoration(
               labelText: 'Nome Solicitante',
               labelStyle: TextStyle(color: Color.fromARGB(255, 255, 140, 0)),
@@ -97,6 +240,7 @@ class MyCustomForm extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: TextFormField(
+            controller:telefoneController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               labelText: 'Telefone',
@@ -170,7 +314,24 @@ class MyCustomForm extends StatelessWidget {
           margin:
               const EdgeInsets.only(bottom: 40, left: 10, right: 10, top: 89),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () async {
+              if(Globals.imagesPath.length == 3 ){
+                await uploadImage(Globals.imagesPath);
+                await updateColecao(nomeController.text, telefoneController.text);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Socorro Solicitado com Sucesso.'),
+                  ),
+                );
+              }else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Você precisa tirar todas as fotos antes de solicitar.'),
+                  ),
+                );
+              }
+
+            },
             style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
             child: const Row(
@@ -232,6 +393,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -255,6 +417,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             if (!mounted) return;
 
             await saveImageToGallery(image.path);
+            Globals.imagesPath.add(image.path);
+
           } catch (e) {
             print(e);
           }

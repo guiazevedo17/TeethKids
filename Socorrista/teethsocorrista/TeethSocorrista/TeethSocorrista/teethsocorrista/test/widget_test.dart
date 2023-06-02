@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // ignore: unused_import
-import 'package:teethsocorrista/Identificacao.dart';
+//import 'package:teethsocorrista/Identificacao.dart';
 import 'package:teethsocorrista/main.dart';
 
 void main() {
