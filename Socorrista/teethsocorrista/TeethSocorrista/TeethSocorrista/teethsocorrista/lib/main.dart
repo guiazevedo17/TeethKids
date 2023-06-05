@@ -26,9 +26,16 @@ class Globals{
   static List<String> imagesPath = [];
   static List<String> downloadURL = [];
   static String? fcmToken = '';
+  static List<String> ids = [];
+  static VoidCallback? onIdsUpdated;
+
+  static void addItem(String item) {
+    ids.add(item);
+    if (onIdsUpdated != null) {
+      onIdsUpdated!();
+    }
+  }
 }
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,18 +51,16 @@ void main() async {
   Globals.fcmToken = await FirebaseMessaging.instance.getToken();
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
-
-    if (message.notification != null) {
-      print('Message also contained a notification: ${message.notification}');
-    }
+    String id = message.data['id'];
+    Globals.addItem(id);
+    print("ID:${message.data['id']}");
   });
 
 
   runApp(const MyApp());
 
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -92,65 +97,96 @@ class Identificacao extends StatelessWidget {
     );
   }
 }
-class AbrirChamado extends StatelessWidget{
+class AbrirChamado extends StatelessWidget {
 
   Future<bool> checkDocument() async {
     final db = FirebaseFirestore.instance;
-    final docRef = db.collection('emergencies').doc(Globals.userCredential?.user?.uid);
+    final docRef = db.collection('emergencies').doc(
+        Globals.userCredential?.user?.uid);
     final docSnapshot = await docRef.get();
     final exists = docSnapshot.exists;
     return exists;
   }
 
-  Future<void> iniciarColecao() async{
-   final db = FirebaseFirestore.instance;
-   final id = Globals.userCredential?.user?.uid; 
-   final user = <String, dynamic>{
-     "userId": Globals.userCredential?.user?.uid,
-     "fcmToken": Globals.fcmToken,
-     "state": 'invalid'
-   };
+  Future<void> iniciarColecao() async {
+    final db = FirebaseFirestore.instance;
+    final id = Globals.userCredential?.user?.uid;
+    final user = <String, dynamic>{
+      "userId": Globals.userCredential?.user?.uid,
+      "fcmToken": Globals.fcmToken,
+      "state": 'invalid'
+    };
 
-   db.collection('emergencies').doc(id).set(user).whenComplete(() =>  print('Documento Iniciado com sucesso') );
+    db.collection('emergencies').doc(id).set(user).whenComplete(() =>
+        print('Documento Iniciado com sucesso'));
 
   }
 
   @override
-  Widget build(BuildContext context){
-    const appTittle = 'TeethKids - Socorrista';
+  Widget build(BuildContext context) {
+    const appTitle = 'TeethKids - Socorrista';
 
-    void IniciarIdentificacao() {
+    void iniciarIdentificacao() {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Identificacao()),
       );
     }
+
+
     return MaterialApp(
-        title: appTittle,
-        home:Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: const Text(appTittle),
-            backgroundColor: Color.fromARGB(255, 255, 140, 0),
-          ),
-          body: Center(
-            child: ElevatedButton(
-              onPressed:() async{
-
-                bool docExists = await checkDocument();
-                if(!docExists){
-                  await iniciarColecao();
-                }
-                  IniciarIdentificacao();
-              },
-              child: Text('Iniciar Chamado'),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 255, 140, 0)
+      title: appTitle,
+      home: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(appTitle),
+          backgroundColor: Color.fromARGB(255, 255, 140, 0),
+        ),
+        body: Builder(
+          builder: (BuildContext builderContext) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      bool docExists = await checkDocument();
+                      if (!docExists) {
+                        await iniciarColecao();
+                        iniciarIdentificacao();
+                      } else {
+                        ScaffoldMessenger.of(builderContext).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Você já possui um socorro em aberto'),
+                          ),
+                        );
+                      }
+                    },
+                    child: Text('Iniciar Chamado'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 255, 140, 0),
+                    ),
+                  ),
+                  SizedBox(height: 16), // Espaçamento entre os botões
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EmergenciesList()),
+                      );
+                    },
+                    child: Text('Vizualizar Socorro'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 255, 140, 0),
+                    ),
+                  ),
+                ],
               ),
-
-            ),
-          ),
-        )
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -232,8 +268,8 @@ class MyCustomForm extends StatelessWidget {
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                color: Color.fromARGB(255, 255, 140, 0),
-              )),
+                    color: Color.fromARGB(255, 255, 140, 0),
+                  )),
             ),
           ),
         ),
@@ -247,8 +283,8 @@ class MyCustomForm extends StatelessWidget {
               labelStyle: TextStyle(color: Color.fromARGB(255, 255, 140, 0)),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                color: Color.fromARGB(255, 255, 140, 0),
-              )),
+                    color: Color.fromARGB(255, 255, 140, 0),
+                  )),
             ),
           ),
         ),
@@ -312,23 +348,21 @@ class MyCustomForm extends StatelessWidget {
         Container(
           alignment: Alignment.bottomCenter,
           margin:
-              const EdgeInsets.only(bottom: 40, left: 10, right: 10, top: 89),
+          const EdgeInsets.only(bottom: 40, left: 10, right: 10, top: 89),
           child: ElevatedButton(
             onPressed: () async {
-              if(Globals.imagesPath.length == 3 ){
-                await uploadImage(Globals.imagesPath);
-                await updateColecao(nomeController.text, telefoneController.text);
+              if(Globals.imagesPath.length < 3 || nomeController.text.isEmpty || telefoneController.text.isEmpty ){
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Socorro Solicitado com Sucesso.'),
+                    content: Text('Prencha todos os dados'),
                   ),
                 );
               }else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Você precisa tirar todas as fotos antes de solicitar.'),
-                  ),
-                );
+                await uploadImage(Globals.imagesPath);
+                await updateColecao(nomeController.text, telefoneController.text);
+
+                Navigator.push(context,MaterialPageRoute(builder: (context) => EmergenciesList()) );
+
               }
 
             },
@@ -341,6 +375,160 @@ class MyCustomForm extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class EmergenciesList extends StatefulWidget{
+  @override
+  _EmergenciesListState createState() => _EmergenciesListState();
+}
+
+class _EmergenciesListState extends State <EmergenciesList> {
+  Stream<List<String>>? idsStream;
+  List<String> items = [];
+
+  @override
+  void initState() {
+
+    super.initState();
+    updateItems();
+    listenToChanges();
+  }
+
+  void listenToChanges() {
+    Globals.onIdsUpdated = updateItems; // Atribui o método updateItems ao callback
+  }
+
+  void updateItems() {
+    setState(() {
+      items = List<String>.from(Globals.ids);
+    });
+  }
+  @override
+  void dispose() {
+    Globals.onIdsUpdated = null;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (items.isEmpty) {
+      return MaterialApp(
+        title: 'Socorro Aberto',
+        home: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text('Socorro Aberto'),
+            backgroundColor: Color.fromARGB(255, 255, 140, 0),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.push(context,MaterialPageRoute(builder: (context) => AbrirChamado()) );
+
+              },
+            ),
+          ),
+          body: Center(
+            child: Text('Aguardando Dentistas'),
+          ),
+        ),
+      );
+    } else {
+      return MaterialApp(
+        title: 'Socorro Aberto',
+        home: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text('Socorro Aberto'),
+            backgroundColor: Color.fromARGB(255, 255, 140, 0),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.push(context,MaterialPageRoute(builder: (context) => AbrirChamado()) );
+              },
+            ),
+          ),
+          body: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () async {
+                  String idDentist = items[index];
+                  Data data = await getData(idDentist);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetalhesScreen(data.name),
+                    ),
+                  );
+                },
+                child: ListTile(
+                  title: Text(items[index]),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
+  }
+}
+class Data {
+  final String name;
+  //final String phone;
+  //final String url;
+
+  Data({required this.name});
+}
+
+Future<Data> getData(String id) async {
+  final db = FirebaseFirestore.instance;
+
+  DocumentSnapshot<Map<String, dynamic>> snapshot = await db.collection('dentists').doc(id).get();
+  // print('-----------------------');
+  // print("Debug \n");
+  // print('String id:${id}');
+  // print('SnapshotData:${snapshot.data()}');
+  // print('\n-----------------------');
+
+  String name = snapshot.data()!['name'];
+  // String phone = snapshot.data()!['string2'];
+  //String url = snapshot.data()!['url'];
+
+  return Data(name: name);
+}
+class DetalhesScreen extends StatelessWidget {
+  final String string1;
+  //final String imageUrl ='';
+  DetalhesScreen(this.string1);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Detalhes'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Nome: $string1'),
+            SizedBox(height: 16),
+            //Image.network(imageUrl), //Imagem
+            //SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Funcionamento do Botão
+              },
+              child: Text('Selecionar Dentista'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 255, 140, 0),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -417,13 +605,81 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             if (!mounted) return;
 
             await saveImageToGallery(image.path);
-            Globals.imagesPath.add(image.path);
+
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DisplayImageScreen(imagePath: image.path),
+              ),
+            );
 
           } catch (e) {
             print(e);
           }
         },
         child: const Icon(Icons.camera_alt),
+      ),
+    );
+  }
+}
+
+
+
+class DisplayImageScreen extends StatelessWidget {
+  final String imagePath;
+
+
+  DisplayImageScreen({required this.imagePath});
+
+
+  Future<void> deleteImage(String imagePath) async {
+    try {
+      final file = File(imagePath);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      print('Erro ao excluir a imagem: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Imagem Capturada'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.file(
+              File(imagePath),
+              fit: BoxFit.contain,
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Globals.imagesPath.add(imagePath);
+
+                Navigator.pop(context);
+                Navigator.pop(context);
+
+              },
+              child: Text('Usar foto'),
+            ),
+            SizedBox(height: 8),
+            OutlinedButton(
+              onPressed: () {
+                deleteImage(imagePath);
+                Navigator.pop(context);
+
+              },
+              child: Text('Tirar outra foto'),
+            ),
+          ],
+        ),
       ),
     );
   }
