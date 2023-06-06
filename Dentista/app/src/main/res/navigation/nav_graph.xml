@@ -113,12 +113,6 @@
         <action
             android:id="@+id/action_ProfileFragment_to_ReputationFragment"
             app:destination="@id/ReputationProfileFragment"/>
-        <action
-            android:id="@+id/action_ProfileFragment_to_RequestFeedbackFragment"
-            app:destination="@id/RequestFeedbackFragment"/>
-        <action
-            android:id="@+id/action_SignInActivity_to_EmergenciesListFragment"
-            app:destination="@+id/EmergenciesListFragment"/>
 
     </fragment>
 

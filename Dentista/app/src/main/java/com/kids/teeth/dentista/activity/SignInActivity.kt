@@ -39,6 +39,7 @@ class SignInActivity : AppCompatActivity() {
             val fragment = EmergenciesListFragment()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
                 .commit()
 
             //clear top

@@ -116,7 +116,6 @@ class ProfileFragment : Fragment() {
         binding.btnAddressProfile.background = btnBorder
         binding.btnEmergenciesProfile.background = btnBorder
         binding.btnReputationProfile.background = btnBorder
-        binding.btnRequestFeedbackProfile.background = btnBorder
 
         binding.scStatusProfile.setOnClickListener {
             val isChecked = binding.scStatusProfile.isChecked
@@ -154,33 +153,11 @@ class ProfileFragment : Fragment() {
         binding.btnReputationProfile.setOnClickListener { // Minha Reputação
             findNavController().navigate(R.id.action_ProfileFragment_to_ReputationFragment)
         }
-
-        binding.btnRequestFeedbackProfile.setOnClickListener { // Solicitar Avaliação
-            findNavController().navigate(R.id.action_ProfileFragment_to_RequestFeedbackFragment)
-        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
 
-    }
-
-    @Deprecated("Deprecated")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.profile_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    @Deprecated("Deprecated")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.btnLogout -> {
-                auth.signOut()
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
 }

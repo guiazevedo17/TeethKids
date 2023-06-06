@@ -73,13 +73,6 @@ class AddressesListFragment : Fragment() {
 
         loadAddressesFirestore()
 
-//        if (addresses.isEmpty()){
-//            addresses = AddressesDao.searchAll() as ArrayList<Address>
-//        } else if(AddressesDao.searchAll().isEmpty()) {
-//            addresses = AddressesDao.searchAll() as ArrayList<Address>
-//            Toast.makeText(requireContext(),"Sem Endereços por enquanto",Toast.LENGTH_SHORT).show()
-//        }
-
     }
 
     private fun loadAddressesFirestore(){

@@ -57,21 +57,6 @@ class EmergenciesListFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         Log.d("EmergenciesListFragment", "Binding is null: ${binding == null}")
-
-
-        val btnBorder = GradientDrawable()
-        btnBorder.setColor(ContextCompat.getColor(requireContext(), R.color.tk_blue))
-        btnBorder.setStroke(6, ContextCompat.getColor(requireContext(),R.color.tk_blue))
-        btnBorder.cornerRadius = 30f
-
-        binding.btnEmergenciesHistoric.background = btnBorder
-
-        binding.btnEmergenciesHistoric.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, EmergenciesHistoricFragment())
-                .commit()
-        }
-
     }
 
     override fun onStart() {

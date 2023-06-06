@@ -13,24 +13,8 @@
         android:layout_height="0dp"
         android:visibility="visible"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnEmergenciesHistoric"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/emergency_card" />
 
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnEmergenciesHistoric"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rvEmergenciesList"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/fragment_emergencies_historic"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:padding="10sp"
-        android:layout_marginTop="15dp"
-        android:background="@color/tk_blue"
-        android:layout_marginBottom="15dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
