@@ -19,6 +19,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 //import do firebase storage
 import 'package:firebase_storage/firebase_storage.dart';
 
+//import 'package:intl/intl.dart';
+
 final List<CameraDescription> camerasList = [];
 
 class Globals{
@@ -56,6 +58,16 @@ void main() async {
     print("ID:${message.data['id']}");
   });
 
+  FirebaseMessaging.instance.onTokenRefresh
+      .listen((fcmToken) {
+    // TODO: If necessary send token to application server.
+
+    // Note: This callback is fired at each app startup and whenever a new
+    // token is generated.
+  })
+      .onError((err) {
+    // Error getting token.
+  });
 
   runApp(const MyApp());
 
@@ -97,6 +109,8 @@ class Identificacao extends StatelessWidget {
     );
   }
 }
+
+
 class AbrirChamado extends StatelessWidget {
 
   Future<bool> checkDocument() async {
@@ -104,15 +118,15 @@ class AbrirChamado extends StatelessWidget {
     final docRef = db.collection('emergencies').doc(
         Globals.userCredential?.user?.uid);
     final docSnapshot = await docRef.get();
-    final exists = docSnapshot.exists;
+    var exists = docSnapshot.exists;
     return exists;
   }
 
   Future<void> iniciarColecao() async {
     final db = FirebaseFirestore.instance;
     final id = Globals.userCredential?.user?.uid;
-    final user = <String, dynamic>{
-      "userId": Globals.userCredential?.user?.uid,
+    var user = <String, dynamic>{
+      "userId": id,
       "fcmToken": Globals.fcmToken,
       "state": 'invalid'
     };
@@ -170,11 +184,22 @@ class AbrirChamado extends StatelessWidget {
                   ),
                   SizedBox(height: 16), // Espaçamento entre os botões
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EmergenciesList()),
-                      );
+                    onPressed: () async {
+                      bool docExistis = await checkDocument();
+                      if(!docExistis){
+                        ScaffoldMessenger.of(builderContext).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Você não possui socorros em aberto'),
+                          ),
+                        );
+                      }else{
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EmergenciesList()),
+                        );
+                      }
+
                     },
                     child: Text('Vizualizar Socorro'),
                     style: ElevatedButton.styleFrom(
@@ -236,12 +261,13 @@ class MyCustomForm extends StatelessWidget {
   Future<void> updateColecao(String nomeController, String telefoneController) async {
     final db = FirebaseFirestore.instance;
     final id = Globals.userCredential?.user?.uid;
-
+    Timestamp timeStamp = Timestamp.now();
     if (id != null) {
       Map<String, dynamic> update = {
         'name': nomeController,
         'phone': telefoneController,
         'images': Globals.downloadURL,
+        'data' : timeStamp,
       };
 
       await db.collection('emergencies').doc(id).set(update, SetOptions(merge: true));
@@ -250,6 +276,7 @@ class MyCustomForm extends StatelessWidget {
       print('ID do usuário é nulo');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final nomeController = TextEditingController();
@@ -605,7 +632,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             if (!mounted) return;
 
             await saveImageToGallery(image.path);
-
 
             Navigator.push(
               context,
