@@ -24,5 +24,8 @@
     <!-- Decline -->
     <color name="decline_emergency">#ED6767</color>
     <color name="decline_emergency_text">#7E1515</color>
+    
+    <!-- Empty State -->
+    <color name="empty_gray">#435254</color>
 
 </resources>

@@ -7,6 +7,33 @@
     android:background="@color/tk_grey"
     tools:context=".fragment.ProfileFragment">
 
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tbProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_title_profile"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:gravity="center_horizontal"
+        android:padding="15dp"
+        android:background="@color/tk_blue"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Sair -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnLogoutProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_logout"
+        android:background="@null"
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <!-- Foto de Perfil -->
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivProfilePicture"
@@ -17,7 +44,7 @@
         app:layout_constraintBottom_toTopOf="@id/tvNameProfile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tbProfile" />
 
     <!-- Nome -->
     <androidx.appcompat.widget.AppCompatTextView

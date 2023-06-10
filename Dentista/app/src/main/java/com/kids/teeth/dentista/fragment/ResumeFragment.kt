@@ -32,7 +32,9 @@ class ResumeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        binding.btnBackResumeSignUp.setOnClickListener {
+            findNavController().navigate(R.id.action_ResumeFragment_to_SignUpFragment)
+        }
 
         binding.btnConcludeResume.setOnClickListener {
             val resume = binding.etResume.text.toString()

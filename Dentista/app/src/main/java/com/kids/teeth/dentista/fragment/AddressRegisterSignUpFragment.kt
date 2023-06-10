@@ -8,20 +8,20 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.dao.AddressesDao
-import com.kids.teeth.dentista.databinding.FragmentAddressRegisterBinding
+import com.kids.teeth.dentista.databinding.FragmentAddressRegisterSignUpBinding
 import com.kids.teeth.dentista.model.Address
 
-class AddressRegisterFragment : Fragment() {
+class AddressRegisterSignUpFragment : Fragment() {
 
-    private var _binding: FragmentAddressRegisterBinding? = null
-    private val binding: FragmentAddressRegisterBinding get() = _binding!!
+    private var _binding: FragmentAddressRegisterSignUpBinding? = null
+    private val binding: FragmentAddressRegisterSignUpBinding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddressRegisterBinding
+        _binding = FragmentAddressRegisterSignUpBinding
             .inflate(
                 inflater,
                 container,
@@ -33,6 +33,10 @@ class AddressRegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.btnBackAddressRegisterSignUp.setOnClickListener {
+            findNavController().navigate(R.id.action_AddressRegisterSignUpFragment_to_AddressesListSignUpFragment)
+        }
+
         binding.btnConcludeAddressRegister.setOnClickListener {
 
             val newAddress = createAddress()
@@ -40,7 +44,6 @@ class AddressRegisterFragment : Fragment() {
             AddressesDao.add(newAddress)
 
             findNavController().popBackStack()
-            //clearFields()
         }
     }
 

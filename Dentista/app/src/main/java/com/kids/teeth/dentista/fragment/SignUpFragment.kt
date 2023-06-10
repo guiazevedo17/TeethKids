@@ -62,8 +62,13 @@ class SignUpFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.btnCancelSignUp.setOnClickListener {
+            clearFields()
+            findNavController().navigate(R.id.action_SignUpFragment_to_SignInFragment)
+        }
+
         binding.btnAddressSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_SignUpFragment_to_AddressesListFragment)
+            findNavController().navigate(R.id.action_SignUpFragment_to_AddressesListSignUpFragment)
         }
 
         binding.btnResumeSignUp.setOnClickListener {
@@ -143,7 +148,6 @@ class SignUpFragment : Fragment(){
     private fun registerAccount(Name: String, Phone: String, Email: String, Password: String, Resume: String, Addresses: List<Address>, Uid: String, Availability: Boolean,Fcmtoken: String) {
 
         functions = Firebase.functions("southamerica-east1")
-
 
         val dentist = hashMapOf(
             "name" to Name,

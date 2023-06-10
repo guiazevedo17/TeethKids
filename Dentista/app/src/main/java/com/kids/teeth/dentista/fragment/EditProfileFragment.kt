@@ -59,6 +59,10 @@ class EditProfileFragment : Fragment() {
 
         binding.btnConcludeEditProfile.background = btnBorder
 
+        binding.btnCancelEditProfile.setOnClickListener {
+            findNavController().navigate(R.id.action_EditProfileFragment_to_ProfileFragment)
+        }
+
         binding.btnConcludeEditProfile.setOnClickListener {
             val Name = binding.etNameEditProfile.text.toString()
             val Phone = binding.etPhoneEditProfile.text.toString()

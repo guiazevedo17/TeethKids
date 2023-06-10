@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,16 +15,15 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.app
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.dao.AddressesDao
-import com.kids.teeth.dentista.databinding.FragmentAddressesListBinding
+import com.kids.teeth.dentista.databinding.FragmentAddressesListSignUpBinding
 import com.kids.teeth.dentista.model.Address
-import com.kids.teeth.dentista.model.Emergency
 import com.kids.teeth.dentista.recyclerview.adapter.AddressesListAdapter
 import com.kids.teeth.dentista.recyclerview.adapter.EmergenciesListAdapter
 
-class AddressesListFragment : Fragment() {
+class AddressesListSignUpFragment : Fragment() {
 
-    private var _binding: FragmentAddressesListBinding? = null
-    private val binding: FragmentAddressesListBinding get() = _binding!!
+    private var _binding: FragmentAddressesListSignUpBinding? = null
+    private val binding: FragmentAddressesListSignUpBinding get() = _binding!!
 
     var addresses = ArrayList<Address>()
 
@@ -37,7 +35,7 @@ class AddressesListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddressesListBinding
+        _binding = FragmentAddressesListSignUpBinding
             .inflate(
                 inflater,
                 container,
@@ -50,6 +48,9 @@ class AddressesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        addresses = AddressesDao.searchAll() as ArrayList<Address>
+        adapter = AddressesListAdapter(addresses)
+
         if (addresses.isNotEmpty()){
             recyclerView = binding.rvAddressList
             recyclerView.adapter = adapter
@@ -58,9 +59,14 @@ class AddressesListFragment : Fragment() {
 
         Toast.makeText(requireContext(),"AddressListFragment onViewCreated() | Lista: ${AddressesDao.searchAll()}", Toast.LENGTH_LONG).show()
 
-        binding.fabAddAddress.setOnClickListener{
-            findNavController().navigate(R.id.action_AddressesListFragment_to_AddressRegisterFragment)
+        binding.btnBackAddressesListSignUp.setOnClickListener {
+            findNavController().navigate(R.id.action_AddressesListSignUpFragment_to_SignUpFragment)
         }
+
+        binding.fabAddAddress.setOnClickListener{
+            findNavController().navigate(R.id.action_AddressesListSignUpFragment_to_AddressRegisterSignUpFragment)
+        }
+
     }
 
     override fun onDestroyView() {
@@ -71,36 +77,15 @@ class AddressesListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        loadAddressesFirestore()
+        if (addresses.isEmpty()){
+            binding.rvAddressList.visibility = View.GONE
+            binding.tvTitleEmptyAddresses.visibility = View.VISIBLE
+            binding.tvSubtitleEmptyAddresses.visibility = View.VISIBLE
+        } else {
+            binding.rvAddressList.visibility = View.VISIBLE
+            binding.tvTitleEmptyAddresses.visibility = View.GONE
+            binding.tvSubtitleEmptyAddresses.visibility = View.GONE
+        }
 
     }
-
-    private fun loadAddressesFirestore(){
-        val db = FirebaseFirestore.getInstance(Firebase.app)
-        var address: Address
-
-        db.collection("dentists")
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                querySnapshot.forEach { document ->
-                    //Log.d("ContactsList", "Contato ID ${document.id}")
-                    val name = document.data["name"] as? String
-
-                    if (name != null) {
-                        address = Address(name)
-
-                        addresses.add(address)
-                        adapter.notifyDataSetChanged()
-                    } else{
-                        Log.w("AddressesList", "Address name is null!")
-                    }
-
-                }
-                // notificamos que o adapter foi alterado. Com isso recyclerview atualizará os dados
-            }
-            .addOnFailureListener { exception ->
-                Log.w("AddressesList", "Error getting documents $exception")
-            }
-    }
-
 }

@@ -11,10 +11,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -42,6 +41,7 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(
             inflater, container, false
         )
+
         return binding.root
     }
 
@@ -96,7 +96,6 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val editBorder = GradientDrawable()
         editBorder.setColor(Color.TRANSPARENT)
         editBorder.setStroke(10, ContextCompat.getColor(requireContext(), R.color.tk_blue))
@@ -116,6 +115,11 @@ class ProfileFragment : Fragment() {
         binding.btnAddressProfile.background = btnBorder
         binding.btnEmergenciesProfile.background = btnBorder
         binding.btnReputationProfile.background = btnBorder
+
+        binding.btnLogoutProfile.setOnClickListener {
+            auth.signOut()
+            findNavController().navigate(R.id.action_ProfileFragment_to_SignInFragment)
+        }
 
         binding.scStatusProfile.setOnClickListener {
             val isChecked = binding.scStatusProfile.isChecked
@@ -141,9 +145,7 @@ class ProfileFragment : Fragment() {
 
         binding.btnAddressProfile.setOnClickListener { // Endereços
 
-            val direction = ProfileFragmentDirections.actionProfileFragmentToAddressesListFragment()
-
-            findNavController().navigate(direction)
+            findNavController().navigate(R.id.action_ProfileFragment_to_AddressesListProfileFragment)
         }
 
         binding.btnEmergenciesProfile.setOnClickListener { // Emergências
@@ -153,6 +155,7 @@ class ProfileFragment : Fragment() {
         binding.btnReputationProfile.setOnClickListener { // Minha Reputação
             findNavController().navigate(R.id.action_ProfileFragment_to_ReputationFragment)
         }
+
     }
 
     override fun onDestroyView() {

@@ -22,7 +22,6 @@ class SignInFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -53,29 +52,27 @@ class SignInFragment : Fragment() {
 
         binding.btnLogin.setOnClickListener{
 
-            val Email = binding.etEmailSignIn.text.toString()
-            val Password = binding.etPasswordSignIn.text.toString()
+            val email = binding.etEmailSignIn.text.toString()
+            val password = binding.etPasswordSignIn.text.toString()
 
-            auth.signInWithEmailAndPassword(Email,Password).addOnCompleteListener { login ->
-                if (login.isSuccessful) {
-                    findNavController().navigate(R.id.action_SignInFragment_to_ProfileFragment)
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { login ->
+                    if (login.isSuccessful) {
+                        binding.etEmailSignIn.setText("")
+                        binding.etPasswordSignIn.setText("")
+                        findNavController().navigate(R.id.action_SignInFragment_to_ProfileFragment)
+                    }
+                    else {
+                        val snackbar = Snackbar.make(view, "Email ou senha incorretos!", Snackbar.LENGTH_SHORT)
+                        snackbar.setBackgroundTint(Color.RED)
+                        snackbar.show()
+                    }
                 }
-                else {
-                    val snackbar = Snackbar.make(view, "Email ou senha incorretos!", Snackbar.LENGTH_SHORT)
-                    snackbar.setBackgroundTint(Color.RED)
-                    snackbar.show()
-                }
+            } else {
+                val snackbar = Snackbar.make(view, "Por favor, preencha todos os campos!", Snackbar.LENGTH_SHORT)
+                snackbar.setBackgroundTint(Color.RED)
+                snackbar.show()
             }
         }
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            android.R.id.home -> {
-//                requireActivity().onBackPressed()
-//                false
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
 }

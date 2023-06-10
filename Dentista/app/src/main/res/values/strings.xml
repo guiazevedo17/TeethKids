@@ -63,6 +63,10 @@
     <!-- DefaultMessageService -->
     <string name="default_notification_channel_id" translatable="false">canal_padrao</string>
     <string name="fcm_default_title_message" translatable="false">Mensagem</string>
+    <string name="empty_addresses_list_title">Sem Endereços Cadastrados!</string>
+    <string name="empty_addresses_list_subtitle">Por favor, Adicione um Endereço</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

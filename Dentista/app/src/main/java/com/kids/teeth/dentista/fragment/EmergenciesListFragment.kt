@@ -56,7 +56,10 @@ class EmergenciesListFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        Log.d("EmergenciesListFragment", "Binding is null: ${binding == null}")
+        binding.btnBackEmergenciesList.setOnClickListener {
+            findNavController().navigate(R.id.action_EmergenciesListFragment_to_ProfileFragment)
+        }
+
     }
 
     override fun onStart() {
