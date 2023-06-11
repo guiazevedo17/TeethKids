@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">Teeth Kids</string>
+    <string name="app_name">Dentista</string>
 
     <string name="login">Entrar</string>
 
     <string name="conclude">Concluir</string>
 
     <!-- SignInFragment -->
-    <string name="fragment_title_sign_in">Login</string>
+    <string name="fragment_title_sign_in">Teeth Kids</string>
     <string name="not_signed">Ainda não possui conta?</string>
 
     <!-- SignUpFragment -->
@@ -59,10 +59,10 @@
     <string name="fragment_emergencies_historic">Histórico de Emergências</string>
     <string name="accept">Aceitar</string>
     <string name="decline">Recusar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- DefaultMessageService -->
     <string name="default_notification_channel_id" translatable="false">canal_padrao</string>
     <string name="fcm_default_title_message" translatable="false">Mensagem</string>
-
-
+    <string name="take_picture">Tirar foto</string>
 </resources>

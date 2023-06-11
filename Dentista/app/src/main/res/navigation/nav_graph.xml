@@ -40,10 +40,12 @@
             android:id="@+id/action_SignUpFragment_to_ResumeFragment"
             app:destination="@id/ResumeFragment"/>
 
-        <argument
-            android:name="resumeRegistered"
-            app:argType="string"
-            android:defaultValue="Invalido" />
+        <action
+            android:id="@+id/action_SignUpFragment_to_CameraPreviewFragment"
+            app:destination="@+id/CameraPreviewFragment"
+            />
+
+
 
     </fragment>
 
@@ -140,21 +142,6 @@
             android:id="@+id/action_EmergenciesListFragment_to_ProfileFragment"
             app:destination="@id/ProfileFragment"/>
 
-        <action
-            android:id="@+id/action_EmergenciesListFragment_to_EmergenciesHistoricFragment"
-            app:destination="@id/EmergenciesHistoricFragment"/>
-    </fragment>
-
-    <!-- Histórico de Emergências -->
-    <fragment
-        android:id="@+id/EmergenciesHistoricFragment"
-        android:name="com.kids.teeth.dentista.fragment.EmergenciesHistoricFragment"
-        android:label="@string/fragment_emergencies_historic"
-        tools:layout="@layout/fragment_emergencies_historic">
-
-        <action
-            android:id="@+id/action_EmergenciesHistoricFragment_to_EmergenciesListFragment"
-            app:destination="@id/EmergenciesListFragment"/>
     </fragment>
 
     <!-- Minha Reputação -->
@@ -181,5 +168,17 @@
             app:destination="@id/ProfileFragment"/>
     </fragment>
 
+    <!-- Tirar foto -->
+    <fragment
+        android:id="@+id/CameraPreviewFragment"
+        android:name="com.kids.teeth.dentista.fragment.CameraPreviewFragment"
+        android:label="@string/take_picture"
+        tools:layout="@layout/fragment_camera_preview">
+
+        <action
+            android:id="@+id/action_CameraPreviewFragment_to_SignUpFragment"
+            app:destination="@id/SignUpFragment"/>
+
+    </fragment>
 </navigation>
 

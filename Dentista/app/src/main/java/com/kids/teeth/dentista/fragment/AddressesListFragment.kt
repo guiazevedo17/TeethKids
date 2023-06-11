@@ -70,6 +70,7 @@ class AddressesListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        recyclerView.adapter = adapter
 
         loadAddressesFirestore()
 

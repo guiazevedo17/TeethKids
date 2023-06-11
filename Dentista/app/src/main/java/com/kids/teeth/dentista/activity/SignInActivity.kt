@@ -59,7 +59,6 @@ class SignInActivity : AppCompatActivity() {
             R.id.AddressRegisterFragment -> "Cadastro de Endereço"
 
             R.id.EmergenciesListFragment -> "Emergências"
-            R.id.EmergenciesHistoricFragment -> "Histórico de Emergências"
             R.id.ReputationProfileFragment -> "Minha Reputação"
             R.id.RequestFeedbackFragment -> "Solicitar Avaliação"
 
