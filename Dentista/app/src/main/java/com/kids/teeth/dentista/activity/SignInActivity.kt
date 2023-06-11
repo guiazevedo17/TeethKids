@@ -3,13 +3,10 @@ package com.kids.teeth.dentista.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.databinding.ActivitySignInBinding
 import com.kids.teeth.dentista.fragment.EmergenciesListFragment
-import com.kids.teeth.dentista.fragment.ProfileFragment
 
 
 class SignInActivity : AppCompatActivity() {
@@ -24,6 +21,8 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+//        navController = navHostFragment.navController
 
         val action = intent.action
         if (action == "OPEN_FRAGMENT") {
@@ -36,5 +35,7 @@ class SignInActivity : AppCompatActivity() {
             //clear top
 
         }
+
     }
+
 }

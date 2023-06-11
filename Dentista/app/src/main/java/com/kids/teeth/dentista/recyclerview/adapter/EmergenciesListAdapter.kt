@@ -9,9 +9,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.model.Emergency
+import java.util.Locale
 
 class EmergenciesListAdapter(private val dataSet: List<Emergency>) :
     ListAdapter<Emergency, EmergenciesListAdapter.EmergencyViewHolder>(EmergencyDiffCallback) {
+
+    var onItemClick : ((Emergency) -> Unit)? = null
 
     class EmergencyViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
@@ -20,7 +23,13 @@ class EmergenciesListAdapter(private val dataSet: List<Emergency>) :
 
         fun bind(e: Emergency) {
             currentEmergency = e
-            requesterName.text = e.name.toString()
+            requesterName.text = capitalizeWords(e.name.toString())
+        }
+
+        private fun capitalizeWords(requesterName: String): CharSequence? {
+            val words = requesterName.split(" ")
+            val capitalizedWords = words.map { it.capitalize(Locale.ROOT) }
+            return capitalizedWords.joinToString(" ")
         }
     }
 
@@ -33,6 +42,10 @@ class EmergenciesListAdapter(private val dataSet: List<Emergency>) :
     override fun onBindViewHolder(holder: EmergencyViewHolder, position: Int) {
         val e = dataSet[position]
         holder.bind(e)
+
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(e)
+        }
     }
 
     override fun getItemCount() = dataSet.size

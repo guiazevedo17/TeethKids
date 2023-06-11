@@ -7,8 +7,8 @@
     android:layout_margin="15dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="3dp">
+    app:cardCornerRadius="20dp"
+    app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -20,10 +20,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_emergency"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnAccept"
+            app:layout_constraintEnd_toStartOf="@id/tvEmergencyRequesterName"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -39,35 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/ivEmergency"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btnAccept"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnAccept"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/accept_emergency"
-            android:drawableStart="@drawable/ic_accept"
-            android:text="@string/accept"
-            android:textSize="12sp"
-            android:textColor="@color/accept_emergency_text"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="30dp"
-            app:layout_constraintStart_toEndOf="@id/ivEmergency"
-            app:layout_constraintTop_toBottomOf="@id/tvEmergencyRequesterName" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnDecline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/decline_emergency"
-            android:drawableStart="@drawable/ic_decline"
-            android:textSize="12sp"
-            android:text="@string/decline"
-            android:textColor="@color/decline_emergency_text"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btnAccept"
-            app:layout_constraintTop_toBottomOf="@id/tvEmergencyRequesterName" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

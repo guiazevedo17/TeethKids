@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:315319518921:android:7da4be8534a77c50832f18",
+        "android_client_info": {
+          "package_name": "com.example.teethsocorrista"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315319518921-q7ujir036hhb9bmrdp9hdnofelncsvoh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlJmuSpRikuESHGHaXS4EX4yPM-ZfMw0o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315319518921-q7ujir036hhb9bmrdp9hdnofelncsvoh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "315319518921-p1kk1i88234aca0hdufi771rpo69rbqt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.teethsocorrista"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:315319518921:android:33836494582320a1832f18",
         "android_client_info": {
           "package_name": "com.kids.teeth.dentista"
@@ -29,6 +65,13 @@
             {
               "client_id": "315319518921-q7ujir036hhb9bmrdp9hdnofelncsvoh.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "315319518921-p1kk1i88234aca0hdufi771rpo69rbqt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.teethsocorrista"
+              }
             }
           ]
         }

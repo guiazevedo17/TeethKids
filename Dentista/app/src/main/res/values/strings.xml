@@ -57,16 +57,22 @@
 
     <!-- EmergenciesListFragment -->
     <string name="fragment_emergencies_historic">Histórico de Emergências</string>
+    <string name="fragment_emergency_detail">Detalhes de Emergência</string>
     <string name="accept">Aceitar</string>
     <string name="decline">Recusar</string>
 
     <!-- DefaultMessageService -->
     <string name="default_notification_channel_id" translatable="false">canal_padrao</string>
     <string name="fcm_default_title_message" translatable="false">Mensagem</string>
+
+    <!-- -->
     <string name="empty_addresses_list_title">Sem Endereços Cadastrados!</string>
     <string name="empty_addresses_list_subtitle">Por favor, Adicione um Endereço</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Detalhes de Emergência - Fotos -->
+    <string name="emergency_detail_region">Região Acidentada</string>
+    <string name="emergency_detail_document">Documento do Solicitante</string>
+    <string name="emergency_detail_wchild">Acompanhada da Criança</string>
 
 
 </resources>

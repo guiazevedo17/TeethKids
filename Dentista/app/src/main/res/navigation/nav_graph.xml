@@ -163,6 +163,27 @@
         <action
             android:id="@+id/action_EmergenciesListFragment_to_ProfileFragment"
             app:destination="@id/ProfileFragment"/>
+
+        <action
+            android:id="@+id/action_EmergenciesListFragment_to_EmergencyDetailFragment"
+            app:destination="@id/EmergencyDetailFragment"/>
+    </fragment>
+
+    <!-- Detalhes da Emergência -->
+    <fragment
+        android:id="@+id/EmergencyDetailFragment"
+        android:name="com.kids.teeth.dentista.fragment.EmergencyDetailFragment"
+        android:label="@string/fragment_emergency_detail"
+        tools:layout="@layout/fragment_emergency_detail">
+
+        <action
+            android:id="@+id/action_EmergencyDetailFragment_to_EmergenciesListFragment"
+            app:destination="@id/EmergenciesListFragment"/>
+
+        <argument
+            android:name="emergency"
+            app:argType="com.kids.teeth.dentista.model.Emergency"/>
+
     </fragment>
 
     <!-- Minha Reputação -->
