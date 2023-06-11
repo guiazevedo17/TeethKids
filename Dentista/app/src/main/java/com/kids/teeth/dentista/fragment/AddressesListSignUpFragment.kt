@@ -55,6 +55,14 @@ class AddressesListSignUpFragment : Fragment() {
             recyclerView = binding.rvAddressList
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+            adapter.onItemClick = { address ->
+                val bundle = Bundle().apply {
+                    putString("name", address.name)
+                }
+                Log.i("AddressesListSignUp", "addressName = ${address.name}")
+                findNavController().navigate(R.id.action_AddressesListSignUpFragment_to_EditAddressSignUpFragment, bundle)
+            }
         }
 
         Toast.makeText(requireContext(),"AddressListFragment onViewCreated() | Lista: ${AddressesDao.searchAll()}", Toast.LENGTH_LONG).show()

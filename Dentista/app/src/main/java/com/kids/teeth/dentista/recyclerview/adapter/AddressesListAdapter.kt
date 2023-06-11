@@ -10,9 +10,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.model.Address
+import com.kids.teeth.dentista.model.Emergency
 
 class AddressesListAdapter(private val dataSet: List<Address>
     ) : ListAdapter<Address, AddressesListAdapter.AddressViewHolder>(AddressDiffCallBack) {
+
+    var onItemClick : ((Address) -> Unit)? = null
 
     class AddressViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val name : AppCompatTextView = view.findViewById(R.id.tvAddressName)

@@ -73,6 +73,10 @@
         <action
             android:id="@+id/action_AddressesListSignUpFragment_to_AddressRegisterSignUpFragment"
             app:destination="@id/AddressRegisterSignUpFragment"/>
+
+        <action
+            android:id="@+id/action_AddressesListSignUpFragment_to_EditAddressSignUpFragment"
+            app:destination="@id/EditAddressSignUpFragment"/>
     </fragment>
 
     <!-- Cadastro de Endereço - Criar Conta -->
@@ -84,6 +88,18 @@
 
         <action
             android:id="@+id/action_AddressRegisterSignUpFragment_to_AddressesListSignUpFragment"
+            app:destination="@id/AddressesListSignUpFragment"/>
+    </fragment>
+
+    <!-- Editar Endereço - Criar Conta -->
+    <fragment
+        android:id="@+id/EditAddressSignUpFragment"
+        android:name="com.kids.teeth.dentista.fragment.EditAddressSignUpFragment"
+        android:label="@string/fragment_title_edit_address"
+        tools:layout="@layout/fragment_edit_address_sign_up">
+
+        <action
+            android:id="@+id/action_EditAddressSignUpFragment_to_AddressesListSignUpFragment"
             app:destination="@id/AddressesListSignUpFragment"/>
     </fragment>
 
@@ -139,6 +155,10 @@
         <action
             android:id="@+id/action_AddressesListProfileFragment_to_AddressRegisterProfileFragment"
             app:destination="@id/AddressRegisterProfileFragment"/>
+
+        <action
+            android:id="@+id/action_AddressesListProfileFragment_to_EditAddressProfileFragment"
+            app:destination="@id/EditAddressProfileFragment"/>
     </fragment>
 
     <!-- Cadastro de Endereço - Perfil -->
@@ -147,6 +167,18 @@
         android:name="com.kids.teeth.dentista.fragment.AddressRegisterProfileFragment"
         android:label="@string/fragment_title_address_register"
         tools:layout="@layout/fragment_address_register_profile">
+
+        <action
+            android:id="@+id/action_AddressRegisterProfileFragment_to_AddressesListProfileFragment"
+            app:destination="@id/AddressesListProfileFragment"/>
+    </fragment>
+
+    <!-- Editar Endereço - Perfil -->
+    <fragment
+        android:id="@+id/EditAddressProfileFragment"
+        android:name="com.kids.teeth.dentista.fragment.EditAddressProfileFragment"
+        android:label="@string/fragment_title_edit_address"
+        tools:layout="@layout/fragment_edit_address_profile">
 
         <action
             android:id="@+id/action_AddressRegisterProfileFragment_to_AddressesListProfileFragment"
@@ -179,10 +211,6 @@
         <action
             android:id="@+id/action_EmergencyDetailFragment_to_EmergenciesListFragment"
             app:destination="@id/EmergenciesListFragment"/>
-
-        <argument
-            android:name="emergency"
-            app:argType="com.kids.teeth.dentista.model.Emergency"/>
 
     </fragment>
 

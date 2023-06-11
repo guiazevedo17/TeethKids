@@ -5,7 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/tk_grey"
-    tools:context=".fragment.EditAddressFragment">
+    tools:context=".fragment.AddressRegisterSignUpFragment">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tbEditAddressProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tk_blue"
+        android:gravity="center_horizontal"
+        android:padding="15dp"
+        android:text="@string/fragment_title_edit_address"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Cancelar -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnCancelEditAddressSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:padding="15dp"
+        android:src="@drawable/ic_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Nome do Endereço -->
     <com.google.android.material.textfield.TextInputLayout
@@ -25,7 +52,7 @@
         app:boxStrokeWidthFocused="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/tbEditAddressProfile">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
@@ -218,7 +245,7 @@
 
     <!-- CONCLUIR -->
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnConcludeAddressRegister"
+        android:id="@+id/btnConcludeEditAddressSignUp"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
