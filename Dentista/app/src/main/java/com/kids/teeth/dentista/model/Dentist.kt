@@ -8,6 +8,7 @@ class Dentist(
     val id: String? = null,
     val uid: String? = null,
 
+    val resume: String? = null,
     val nome: String? = null,
 
     )

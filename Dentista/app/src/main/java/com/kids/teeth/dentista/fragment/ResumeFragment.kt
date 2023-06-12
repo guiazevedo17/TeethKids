@@ -37,13 +37,10 @@ class ResumeFragment : Fragment() {
         }
 
         binding.btnConcludeResume.setOnClickListener {
-            val resume = binding.etResume.text.toString()
+            val bundle = Bundle()
+            bundle.putString("resume", binding.etResume.text.toString())
 
-            val direction = ResumeFragmentDirections.actionResumeFragmentToSignUpFragment()
-
-            direction.resumeRegistered = resume
-
-            findNavController().navigate(direction)
+            findNavController().navigate(R.id.action_ResumeFragment_to_SignUpFragment,bundle)
         }
     }
 

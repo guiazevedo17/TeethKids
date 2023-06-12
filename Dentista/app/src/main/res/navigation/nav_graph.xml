@@ -40,10 +40,12 @@
             android:id="@+id/action_SignUpFragment_to_ResumeFragment"
             app:destination="@id/ResumeFragment"/>
 
-        <argument
-            android:name="resumeRegistered"
-            app:argType="string"
-            android:defaultValue="Invalido" />
+        <action
+            android:id="@+id/action_SignUpFragment_to_CameraPreviewFragment"
+            app:destination="@+id/CameraPreviewFragment"
+            />
+
+
 
     </fragment>
 
@@ -229,5 +231,17 @@
             android:id="@+id/action_ReputationProfileFragment_to_FeedbackFragment"/>
     </fragment>
 
+    <!-- Tirar foto -->
+    <fragment
+        android:id="@+id/CameraPreviewFragment"
+        android:name="com.kids.teeth.dentista.fragment.CameraPreviewFragment"
+        android:label="@string/take_picture"
+        tools:layout="@layout/fragment_camera_preview">
+
+        <action
+            android:id="@+id/action_CameraPreviewFragment_to_SignUpFragment"
+            app:destination="@id/SignUpFragment"/>
+
+    </fragment>
 </navigation>
 
