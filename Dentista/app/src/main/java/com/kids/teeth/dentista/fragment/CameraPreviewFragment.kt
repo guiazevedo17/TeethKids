@@ -64,10 +64,6 @@ class CameraPreviewFragment : Fragment() {
 
         startCamera()
 
-        binding.btnBack.setOnClickListener{
-            findNavController().navigate(R.id.action_CameraPreviewFragment_to_SignUpFragment)
-        }
-
         binding.btnTakePhoto.setOnClickListener {
             imageCapture?.let { capture ->
                 takePicture(capture, object : OnImageSavedListener {
@@ -93,6 +89,7 @@ class CameraPreviewFragment : Fragment() {
                             binding.btnSavePhoto.visibility = View.VISIBLE
                             binding.cameraPreview.visibility = View.GONE
                             binding.capturedImage.visibility = View.VISIBLE
+                            binding.btnTakeAnotherPicture.visibility = View.VISIBLE
                         }
                     }
 
@@ -115,14 +112,14 @@ class CameraPreviewFragment : Fragment() {
             }
         }
 
-
-
-        binding.btnBack.setOnClickListener {
-            val intent = Intent(requireContext(), SignUpFragment::class.java)
-            startActivity(intent)
+        binding.btnTakeAnotherPicture.setOnClickListener{
+            binding.capturedImage.visibility = View.GONE
+            binding.cameraPreview.visibility = View.VISIBLE
+            binding.btnTakePhoto.visibility = View.VISIBLE
+            binding.btnSavePhoto.visibility = View.GONE
+            binding.btnTakeAnotherPicture.visibility = View.GONE
         }
     }
-
     private fun startCamera() {
         cameraProviderFuture.addListener({
             imageCapture = ImageCapture.Builder().build()
