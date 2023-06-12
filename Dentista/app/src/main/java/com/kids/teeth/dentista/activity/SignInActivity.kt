@@ -1,8 +1,10 @@
 package com.kids.teeth.dentista.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.databinding.ActivitySignInBinding
@@ -21,19 +23,14 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
-//        navController = navHostFragment.navController
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        navController = navHostFragment.navController
+        Log.w("SingInActivity", "navController - $navController")
 
         val action = intent.action
         if (action == "OPEN_FRAGMENT") {
-            val fragment = EmergenciesListFragment()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit()
-
-            //clear top
-
+            Log.w("SingInActivity", "abrindo EmergenciesListFragment")
+            navController.navigate(R.id.EmergenciesListFragment)
         }
 
     }

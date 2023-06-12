@@ -56,6 +56,7 @@ class EmergenciesListFragment : Fragment() {
 
         adapter.onItemClick = { item ->
             val bundle = Bundle()
+            bundle.putString("emergencyId", item.id)
             bundle.putString("name", item.name)
             bundle.putString("phone", item.phone)
             bundle.putString("date", item.date)
@@ -84,6 +85,8 @@ class EmergenciesListFragment : Fragment() {
             .get()
             .addOnSuccessListener { querySnapshot ->
                 querySnapshot.forEach { document ->
+                    val id = document.data["userId"] as? String
+
                     val name = document.data["name"] as? String
                     val phone = document.data["phone"] as? String
 
@@ -98,7 +101,7 @@ class EmergenciesListFragment : Fragment() {
                         val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
                         val formattedDate = sdf.format(date)
 
-                        emergency = Emergency(name, phone, formattedDate, images)
+                        emergency = Emergency(id, name, phone, formattedDate, images)
 
                         emergencies.add(emergency)
                         adapter.notifyDataSetChanged()

@@ -8,11 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.app
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.databinding.FragmentEmergencyDetailBinding
+import java.sql.Time
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 class EmergencyDetailFragment : Fragment() {
@@ -21,6 +27,8 @@ class EmergencyDetailFragment : Fragment() {
     private val binding: FragmentEmergencyDetailBinding get() = _binding!!
 
     private lateinit var storage: FirebaseStorage
+    private lateinit var auth: FirebaseAuth
+    private lateinit var functions: FirebaseFunctions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +41,12 @@ class EmergencyDetailFragment : Fragment() {
         _binding = FragmentEmergencyDetailBinding.inflate(
             inflater, container, false
         )
+        auth = FirebaseAuth.getInstance(Firebase.app)
+
+        val currentUser = auth.currentUser
 
         val args = this.arguments
+        val emergencyId = args?.getString("emergencyId")
         val requesterName = args?.getString("name")
         val date = args?.getString("date")
 
@@ -61,8 +73,42 @@ class EmergencyDetailFragment : Fragment() {
                 Glide.with(this).load(imageRefs[2]).into(binding.ivThirdPicture)
             }
         }
-        
+
+        binding.btnBackEmergencyDetail.setOnClickListener {
+            findNavController().navigate(R.id.action_EmergencyDetailFragment_to_EmergenciesListFragment)
+        }
+
+        if (currentUser != null) {
+            binding.btnAcceptEmergency.setOnClickListener {
+
+                val timestamp = Timestamp.now()
+//                val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
+//                val formattedDate = sdf.format(timestamp)
+
+                registerAcceptedEmergency(emergencyId as String, currentUser.uid, timestamp)
+
+                findNavController().navigate(R.id.action_EmergencyDetailFragment_to_EmergenciesListFragment)
+            }
+        }
+
         return binding.root
+    }
+
+    private fun registerAcceptedEmergency(Emergency: String, Dentist: String, Date: Timestamp) {
+        functions = Firebase.functions("southamerica-east1")
+
+        val emergency = hashMapOf(
+            "emergencyId" to Emergency,
+            "dentistId" to Dentist,
+            "date" to Date
+        )
+
+        functions.getHttpsCallable("setAccepted")
+            .call(emergency)
+            .addOnSuccessListener { result ->
+                val resposta = result.data.toString()
+                Log.d("registerAcceptAccount", "Result : ${resposta}")
+            }
     }
 
 
@@ -70,14 +116,6 @@ class EmergencyDetailFragment : Fragment() {
         val words = requesterName.split(" ")
         val capitalizedWords = words.map { it.capitalize(Locale.ROOT) }
         return capitalizedWords.joinToString(" ")
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.btnBackEmergencyDetail.setOnClickListener {
-            findNavController().navigate(R.id.action_EmergencyDetailFragment_to_EmergenciesListFragment)
-        }
     }
 
     override fun onDestroyView() {

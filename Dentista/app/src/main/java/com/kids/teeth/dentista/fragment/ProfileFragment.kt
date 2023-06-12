@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -59,7 +60,8 @@ class ProfileFragment : Fragment() {
 
             db.collection("dentists").document(uid).get().addOnSuccessListener { document ->
                 val name = document.getString("name")
-                binding.tvNameProfile.setText(name)
+                binding.tvNameProfile.text = name
+                Log.i("ProfileFragment", "name = $name")
             }
         }
     }

@@ -149,6 +149,7 @@ class SignUpFragment : Fragment(){
 
         functions = Firebase.functions("southamerica-east1")
 
+
         val dentist = hashMapOf(
             "name" to Name,
             "phone" to Phone,
@@ -157,15 +158,16 @@ class SignUpFragment : Fragment(){
             "resume" to Resume,
             "addresses" to Addresses,
             "availability" to Availability,
-            "fcmToken" to Fcmtoken
+            "fcmToken" to Fcmtoken,
+            "userId" to Uid
         )
 
         functions.getHttpsCallable("setUser")
             .call(dentist)
             .addOnSuccessListener { result ->
                 val resposta :String? = result.data.toString()
+                Log.d("setUserResult","Result : ${resposta}")
             }
-
     }
 
     private fun storeFcmToken(Name: String, Phone: String, Email: String, Password: String, Resume: String,Uid: String){
