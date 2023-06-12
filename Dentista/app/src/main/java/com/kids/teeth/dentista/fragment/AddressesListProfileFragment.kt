@@ -77,7 +77,6 @@ class AddressesListProfileFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        recyclerView.adapter = adapter
 
         if (addresses.isEmpty()){
             binding.rvAddressList.visibility = View.GONE

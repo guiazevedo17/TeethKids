@@ -1,6 +1,8 @@
 package com.kids.teeth.dentista.fragment
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -36,8 +38,17 @@ class ReputationProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val spannableString = SpannableString(binding.tvReputationCasesQntd.text)
+        spannableString.setSpan(UnderlineSpan(), 0, binding.tvReputationCasesQntd.text.length, 0)
+
+        binding.tvReputationCasesQntd.text = spannableString
+
         binding.btnBackReputation.setOnClickListener {
             findNavController().navigate(R.id.action_ReputationProfileFragment_to_ProfileFragment)
+        }
+
+        binding.btnReputationFeedbacks.setOnClickListener {
+            findNavController().navigate(R.id.action_ReputationProfileFragment_to_FeedbacksListFragment)
         }
     }
 

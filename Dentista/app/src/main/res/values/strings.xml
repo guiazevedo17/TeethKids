@@ -78,4 +78,6 @@
 
 
     <string name="take_picture">Tirar foto</string>
+    <string name="sucess_cases">Casos Atendidos com Sucesso</string>
+    <string name="feedbacks">Avaliações</string>
 </resources>

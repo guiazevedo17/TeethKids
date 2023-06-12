@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/tk_grey"
     tools:context=".fragment.ReputationProfileFragment">
 
     <!-- Toolbar -->
@@ -32,5 +33,145 @@
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Imagem de Perfil -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivReputationProfilePic"
+        android:layout_width="108dp"
+        android:layout_height="108dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/profile_pic"
+        app:layout_constraintBottom_toTopOf="@id/tvReputationName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tbReputation" />
+
+    <!-- Nome -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvReputationName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Jaiminho"
+        android:textColor="@color/white"
+        android:textSize="45sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivReputationProfilePic" />
+
+    <!-- Texto Casos Atentidos -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvReputationSucessCases"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:text="@string/sucess_cases"
+        android:textColor="@color/tk_blue"
+        android:textSize="25sp"
+        android:padding="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvReputationName" />
+
+    <!-- Quantidade de Casos Atendidos -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvReputationCasesQntd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="16"
+        android:textColor="@color/tk_blue"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/llStarsRank"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvReputationSucessCases" />
+
+    <!-- Classificação por Estrelas -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llStarsRank"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvReputationCasesQntd">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivReputationStar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_star_off" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivReputationStar2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+            android:src="@drawable/ic_star_off" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivReputationStar3"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_star_off" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivReputationStar4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+            android:src="@drawable/ic_star_off" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivReputationStar5"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_star_off" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <!-- Nível de Classificação -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvReputationRank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="3.2"
+        android:textColor="@color/tk_blue"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llStarsRank" />
+
+    <!-- Botão de Avaliações -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnReputationFeedbacks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/tk_blue"
+        android:paddingHorizontal="45dp"
+        android:paddingVertical="20dp"
+        android:text="@string/feedbacks"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvReputationRank" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

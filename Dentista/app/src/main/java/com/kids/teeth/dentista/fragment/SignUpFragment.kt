@@ -96,6 +96,11 @@ class SignUpFragment : Fragment(){
 
         binding.ivProfilePictureSignUp.background = btnBorder
 
+        binding.btnCancelSignUp.setOnClickListener {
+            clearFields()
+            findNavController().navigate(R.id.action_SignUpFragment_to_SignInFragment)
+        }
+
         binding.ivProfilePictureSignUp.setOnClickListener {
             cameraProviderResult.launch(android.Manifest.permission.CAMERA)
         }

@@ -228,7 +228,20 @@
             app:destination="@id/ProfileFragment"/>
 
         <action
-            android:id="@+id/action_ReputationProfileFragment_to_FeedbackFragment"/>
+            android:id="@+id/action_ReputationProfileFragment_to_FeedbacksListFragment"
+            app:destination="@id/FeedbacksListFragment"/>
+    </fragment>
+
+    <!-- Avaliações -->
+    <fragment
+        android:id="@+id/FeedbacksListFragment"
+        android:name="com.kids.teeth.dentista.fragment.FeedbacksListFragment"
+        android:label="@string/feedbacks"
+        tools:layout="@layout/fragment_feedbacks_list">
+
+        <action
+            android:id="@+id/action_FeedbacksListFragment_to_ReputationProfileFragment"
+            app:destination="@id/ReputationProfileFragment"/>
     </fragment>
 
     <!-- Tirar foto -->
