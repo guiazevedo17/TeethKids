@@ -158,5 +158,19 @@
         app:layout_constraintStart_toStartOf="@id/btnAddressProfile"
         app:layout_constraintTop_toBottomOf="@id/btnEmergenciesProfile" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLocale"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/tk_blue"
+        android:paddingHorizontal="30dp"
+        android:text="Localização"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/btnAddressProfile"
+        app:layout_constraintStart_toStartOf="@id/btnAddressProfile"
+        app:layout_constraintTop_toBottomOf="@id/btnReputationProfile" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
