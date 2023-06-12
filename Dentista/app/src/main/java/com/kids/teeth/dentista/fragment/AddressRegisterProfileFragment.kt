@@ -41,14 +41,14 @@ class AddressRegisterProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnBackAddressRegisterProfile.setOnClickListener {
+            clearFields()
             findNavController().navigate(R.id.action_AddressRegisterProfileFragment_to_AddressesListProfileFragment)
         }
 
         binding.btnConcludeAddressRegister.setOnClickListener {
-
             val newAddress = createAddress()
-
-
+            registerAddress(newAddress)
+            clearFields()
         }
     }
 
@@ -66,32 +66,9 @@ class AddressRegisterProfileFragment : Fragment() {
         )
     }
 
-    private fun storeFcmToken(Name: String, Phone: String, Email: String, Password: String, Resume: String,Uid: String){
-        Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                return@OnCompleteListener
-            }
-            // guardar esse token.
-            var fcmToken = task.result
-            registerAddress(Name,Phone,Email,Password,Resume,AddressesDao.searchAll(), Uid,false,fcmToken)
-
-        })
-    }
-
-    private fun registerAddress(Name: String, Phone: String, Email: String, Password: String, Resume: String, Addresses: List<Address>, Uid: String, Availability: Boolean,Fcmtoken: String) {
+    private fun registerAddress(address: Address) {
 
         functions = Firebase.functions("southamerica-east1")
-
-        val address = hashMapOf(
-            "name" to Name,
-            "phone" to Phone,
-            "email" to Email,
-            "password" to Password,
-            "resume" to Resume,
-            "addresses" to Addresses,
-            "availability" to Availability,
-            "fcmToken" to Fcmtoken
-        )
 
         functions.getHttpsCallable("setAddress")
             .call(address)
@@ -111,7 +88,6 @@ class AddressRegisterProfileFragment : Fragment() {
         binding.etCity.setText("")
         binding.etState.setText("")
     }
-
 
 
     override fun onDestroyView() {

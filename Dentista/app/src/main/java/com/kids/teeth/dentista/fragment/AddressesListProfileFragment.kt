@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.app
@@ -27,6 +28,9 @@ class AddressesListProfileFragment : Fragment() {
     private val binding: FragmentAddressesListProfileBinding get() = _binding!!
 
     var addresses = ArrayList<Address>()
+
+    private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter : AddressesListAdapter
@@ -53,6 +57,9 @@ class AddressesListProfileFragment : Fragment() {
 
         adapter = AddressesListAdapter(addresses)
 
+        if (adapter.itemCount == 3)
+            binding.fabAddAddress.visibility = View.GONE
+
         if (addresses.isNotEmpty()){
             recyclerView = binding.rvAddressList
             recyclerView.adapter = adapter
@@ -77,6 +84,9 @@ class AddressesListProfileFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
+        db = FirebaseFirestore.getInstance(Firebase.app)
+        auth = FirebaseAuth.getInstance(Firebase.app)
 
         if (addresses.isEmpty()){
             binding.rvAddressList.visibility = View.GONE
@@ -117,5 +127,6 @@ class AddressesListProfileFragment : Fragment() {
                 Log.w("AddressesList", "Error getting documents $exception")
             }
     }
+
 
 }

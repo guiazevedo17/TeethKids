@@ -130,9 +130,17 @@ class SignUpFragment : Fragment(){
                             snackbar.show()
                             val uid = auth.currentUser?.uid
                             if (uid != null) {
+
                                 storeFcmToken(Name, Phone, Email, Password, Resume, uid)
+
+                                for (address in AddressesDao.searchAll()){
+                                    registerAddress(address)
+                                }
+
                                 AddressesDao.clearAll()
+
                                 capturedImageUri?.let { it1 -> uploadImage(it1) }
+
                                 findNavController().navigate(R.id.action_SignUpFragment_to_SignInFragment)
                             }
                             clearFields()
@@ -156,8 +164,6 @@ class SignUpFragment : Fragment(){
     private fun abrirPreview() {
         findNavController().navigate(R.id.action_SignUpFragment_to_CameraPreviewFragment)
     }
-
-
 
     private val cameraProviderResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
         if (isGranted) {
@@ -195,7 +201,7 @@ class SignUpFragment : Fragment(){
         return true
     }
 
-    private fun registerAccount(Name: String, Phone: String, Email: String, Password: String, Resume: String, Addresses: List<Address>, Uid: String, Availability: Boolean,Fcmtoken: String) {
+    private fun registerAccount(Name: String, Phone: String, Email: String, Password: String, Resume: String, Uid: String, Availability: Boolean,Fcmtoken: String) {
 
         functions = Firebase.functions("southamerica-east1")
 
@@ -206,7 +212,6 @@ class SignUpFragment : Fragment(){
             "email" to Email,
             "password" to Password,
             "resume" to Resume,
-            "addresses" to Addresses,
             "availability" to Availability,
             "fcmToken" to Fcmtoken,
             "userId" to Uid
@@ -227,7 +232,7 @@ class SignUpFragment : Fragment(){
             }
             // guardar esse token.
             var fcmToken = task.result
-            registerAccount(Name,Phone,Email,Password,Resume,AddressesDao.searchAll(), Uid,false,fcmToken)
+            registerAccount(Name,Phone,Email,Password,Resume, Uid,false,fcmToken)
 
         })
     }
@@ -256,5 +261,16 @@ class SignUpFragment : Fragment(){
         }
     }
 
+    private fun registerAddress(address: Address) {
+
+        functions = Firebase.functions("southamerica-east1")
+
+        functions.getHttpsCallable("setAddress")
+            .call(address)
+            .addOnSuccessListener { result ->
+                val resposta :String? = result.data.toString()
+            }
+
+    }
 
 }

@@ -10,15 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.app
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.dao.AddressesDao
 import com.kids.teeth.dentista.databinding.FragmentAddressesListSignUpBinding
 import com.kids.teeth.dentista.model.Address
 import com.kids.teeth.dentista.recyclerview.adapter.AddressesListAdapter
-import com.kids.teeth.dentista.recyclerview.adapter.EmergenciesListAdapter
 
 class AddressesListSignUpFragment : Fragment() {
 
@@ -50,6 +46,9 @@ class AddressesListSignUpFragment : Fragment() {
 
         addresses = AddressesDao.searchAll() as ArrayList<Address>
         adapter = AddressesListAdapter(addresses)
+
+        if (adapter.itemCount == 3)
+            binding.fabAddAddress.visibility = View.GONE
 
         if (addresses.isNotEmpty()){
             recyclerView = binding.rvAddressList

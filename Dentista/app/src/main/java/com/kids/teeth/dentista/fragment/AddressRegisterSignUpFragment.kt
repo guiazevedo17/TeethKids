@@ -43,7 +43,7 @@ class AddressRegisterSignUpFragment : Fragment() {
 
             AddressesDao.add(newAddress)
 
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_AddressRegisterSignUpFragment_to_AddressesListSignUpFragment)
         }
     }
 
