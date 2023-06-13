@@ -3,12 +3,15 @@ package com.kids.teeth.dentista.fragment
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,6 +42,24 @@ class EditProfileFragment : Fragment() {
                 container,
                 false
             )
+        db = FirebaseFirestore.getInstance(Firebase.app)
+        auth = FirebaseAuth.getInstance(Firebase.app)
+
+        val currentUser = auth.currentUser
+        if(currentUser != null) {
+            val uid = currentUser.uid
+            db.collection("dentists").document(uid).get().addOnSuccessListener { document ->
+                val picture = document.getString("picture")
+                if (picture != null) {
+                    Glide.with(this)
+                        .load(picture)
+                        .apply(RequestOptions.circleCropTransform()) // Aplica a transformação de círculo
+                        .into(binding.ivProfilePictureEditProfile)
+                }
+            }
+        }
+
+
         return binding.root
     }
     override fun onStart() {

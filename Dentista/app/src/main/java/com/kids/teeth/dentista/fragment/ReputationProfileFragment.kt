@@ -8,6 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.app
 import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.databinding.FragmentReputationProfileBinding
 
@@ -15,7 +21,9 @@ class ReputationProfileFragment : Fragment() {
 
     private var _binding: FragmentReputationProfileBinding? = null
     private val binding: FragmentReputationProfileBinding get() = _binding!!
+    private lateinit var db: FirebaseFirestore
 
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,6 +40,23 @@ class ReputationProfileFragment : Fragment() {
                 container,
                 false
             )
+        db = FirebaseFirestore.getInstance(Firebase.app)
+        auth = FirebaseAuth.getInstance(Firebase.app)
+
+        val currentUser = auth.currentUser
+        if(currentUser != null) {
+            val uid = currentUser.uid
+            db.collection("dentists").document(uid).get().addOnSuccessListener { document ->
+                val picture = document.getString("picture")
+                if (picture != null) {
+                    Glide.with(this)
+                        .load(picture)
+                        .apply(RequestOptions.circleCropTransform()) // Aplica a transformação de círculo
+                        .into(binding.ivReputationProfilePic)
+                }
+            }
+        }
+
         return binding.root
     }
 
