@@ -1,6 +1,7 @@
 package com.kids.teeth.dentista.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -32,16 +33,36 @@ class ResumeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val args = this.arguments
+
         binding.btnBackResumeSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_ResumeFragment_to_SignUpFragment)
+            val bundle = passData(args)
+
+            Log.w("ResumeFragment", "BACK: name = ${bundle.getString("name")} | phone = ${bundle.getString("phone")} | email = ${bundle.getString("email")} | password = ${bundle.getString("password")}")
+
+
+            findNavController().navigate(R.id.action_ResumeFragment_to_SignUpFragment, bundle)
         }
 
         binding.btnConcludeResume.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("resume", binding.etResume.text.toString())
+            val bundle = passData(args)
+
+            Log.w("ResumeFragment", "CONCLUDE: name = ${bundle.getString("name")} | phone = ${bundle.getString("phone")} | email = ${bundle.getString("email")} | password = ${bundle.getString("password")}")
 
             findNavController().navigate(R.id.action_ResumeFragment_to_SignUpFragment,bundle)
         }
+    }
+
+    private fun passData(args: Bundle?) : Bundle{
+        val bundle = Bundle()
+        bundle.putString("name", args?.getString("name"))
+        bundle.putString("phone", args?.getString("phone"))
+        bundle.putString("email", args?.getString("email"))
+        bundle.putString("password", args?.getString("password"))
+        bundle.putString("confPassword", args?.getString("confPassword"))
+        bundle.putString("resume", binding.etResume.text.toString())
+
+        return bundle
     }
 
 

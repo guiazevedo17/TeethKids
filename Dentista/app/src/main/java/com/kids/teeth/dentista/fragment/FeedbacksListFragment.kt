@@ -62,47 +62,7 @@ class FeedbacksListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-//        loadEmergenciesFirestore()
     }
 
-//    private fun loadEmergenciesFirestore(){
-//        val db = FirebaseFirestore.getInstance(Firebase.app)
-//        var emergency: Emergency
-//
-//        db.collection("emergencies")
-//            .get()
-//            .addOnSuccessListener { querySnapshot ->
-//                querySnapshot.forEach { document ->
-//                    val id = document.data["userId"] as? String
-//
-//                    val name = document.data["name"] as? String
-//                    val phone = document.data["phone"] as? String
-//
-//                    val images = document.data["images"] as? ArrayList<String>
-//
-//                    Log.w("EmergenciesList", "loadEmergencies - images - $images")
-//
-//                    val timestamp = document.data["data"] as? com.google.firebase.Timestamp
-//                    val date = timestamp?.toDate()
-//
-//                    if (name != null && phone != null && date != null && images != null) {
-//                        val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
-//                        val formattedDate = sdf.format(date)
-//
-//                        emergency = Emergency(id, name, phone, formattedDate, images)
-//
-//                        emergencies.add(emergency)
-//                        adapter.notifyDataSetChanged()
-//                    } else{
-//                        Log.w("EmergenciesList", "Some fields are null: name=$name, phone=$phone, date=$date, images=$images")
-//                    }
-//
-//                }
-//                // notificamos que o adapter foi alterado. Com isso recyclerview atualizará os dados
-//            }
-//            .addOnFailureListener { exception ->
-//                Log.w("EmergenciesList", "Error getting documents $exception")
-//            }
-//    }
 
 }

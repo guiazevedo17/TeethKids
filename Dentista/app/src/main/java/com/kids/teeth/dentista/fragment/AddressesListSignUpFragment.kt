@@ -44,6 +44,8 @@ class AddressesListSignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val args = this.arguments
+
         addresses = AddressesDao.searchAll() as ArrayList<Address>
         adapter = AddressesListAdapter(addresses)
 
@@ -67,7 +69,11 @@ class AddressesListSignUpFragment : Fragment() {
         Toast.makeText(requireContext(),"AddressListFragment onViewCreated() | Lista: ${AddressesDao.searchAll()}", Toast.LENGTH_LONG).show()
 
         binding.btnBackAddressesListSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_AddressesListSignUpFragment_to_SignUpFragment)
+            val bundle = passData(args)
+
+            Log.w("AddressesListFragment", "name = ${bundle.getString("name")} | phone = ${bundle.getString("phone")} | email = ${bundle.getString("email")} | password = ${bundle.getString("password")}")
+
+            findNavController().navigate(R.id.action_AddressesListSignUpFragment_to_SignUpFragment, bundle)
         }
 
         binding.fabAddAddress.setOnClickListener{
@@ -94,5 +100,16 @@ class AddressesListSignUpFragment : Fragment() {
             binding.tvSubtitleEmptyAddresses.visibility = View.GONE
         }
 
+    }
+
+    private fun passData(args: Bundle?) : Bundle{
+        val bundle = Bundle()
+        bundle.putString("name", args?.getString("name"))
+        bundle.putString("phone", args?.getString("phone"))
+        bundle.putString("email", args?.getString("email"))
+        bundle.putString("password", args?.getString("password"))
+        bundle.putString("confPassword", args?.getString("confPassword"))
+
+        return bundle
     }
 }

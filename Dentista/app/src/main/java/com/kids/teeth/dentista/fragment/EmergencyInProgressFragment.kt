@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.tasks.OnCompleteListener
@@ -17,6 +18,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.app
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.ktx.messaging
+import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.databinding.FragmentEmergencyInProgressBinding
 import com.kids.teeth.dentista.messaging.DefaultMessageService
 import java.sql.Timestamp
@@ -84,7 +86,7 @@ class EmergencyInProgressFragment : Fragment() {
                     Log.d("setUserResult", "Result : ${resposta}")
                 }
 
-
+            findNavController().navigate(R.id.action_EmergencyInProgressFragment_to_ProfileFragment)
         }
     }
 

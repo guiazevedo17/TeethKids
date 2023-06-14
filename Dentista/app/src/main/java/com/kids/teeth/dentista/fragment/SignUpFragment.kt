@@ -90,6 +90,12 @@ class SignUpFragment : Fragment(){
         val args = this.arguments
         val resume = args?.getString("resume")
         val imgUrl = args?.getString("imageUrl")
+        val name = args?.getString("name")
+
+        Log.w("SingUpFragment", "  : name = ${name} | phone = ${args?.getString("phone")} | email = ${args?.getString("email")} | password = ${args?.getString("password")}")
+
+
+        fillFields(args)
 
         if(imgUrl != null) {
             Glide.with(this)
@@ -113,11 +119,16 @@ class SignUpFragment : Fragment(){
         }
 
         binding.btnAddressSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_SignUpFragment_to_AddressesListSignUpFragment)
+            val bundle = passData()
+            findNavController().navigate(R.id.action_SignUpFragment_to_AddressesListSignUpFragment, bundle)
         }
 
         binding.btnResumeSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_SignUpFragment_to_ResumeFragment)
+            val bundle = passData()
+
+            Log.w("SingUpFragment", "name = ${bundle.getString("name")} | phone = ${bundle.getString("phone")} | email = ${bundle.getString("email")} | password = ${bundle.getString("password")}")
+
+            findNavController().navigate(R.id.action_SignUpFragment_to_ResumeFragment, bundle)
         }
 
         binding.btnConcludeSignUp.setOnClickListener {
@@ -195,6 +206,28 @@ class SignUpFragment : Fragment(){
         } else {
             Snackbar.make(binding.root, "Você não concedeu permissão", Snackbar.LENGTH_INDEFINITE).show()
         }
+    }
+
+    private fun fillFields(args: Bundle?){
+        binding.etNameSignUp.setText(args?.getString("name"))
+        binding.etPhoneSignUp.setText(args?.getString("phone"))
+        binding.etEmailSignUp.setText(args?.getString("email"))
+        binding.etPasswordSignUp.setText(args?.getString("password"))
+        binding.etConfPasswordSignUp.setText(args?.getString("confPassword"))
+
+        Log.w("SingUpFragment", " fillFields() : name = ${args?.getString("name")} | phone = ${args?.getString("phone")} | email = ${args?.getString("email")} | password = ${args?.getString("password")}")
+
+    }
+
+    private fun passData() : Bundle{
+        val bundle = Bundle()
+        bundle.putString("name", binding.etNameSignUp.text.toString())
+        bundle.putString("phone", binding.etPhoneSignUp.text.toString())
+        bundle.putString("email", binding.etEmailSignUp.text.toString())
+        bundle.putString("password", binding.etPasswordSignUp.text.toString())
+        bundle.putString("confPassword", binding.etPasswordSignUp.text.toString())
+
+        return bundle
     }
 
 
