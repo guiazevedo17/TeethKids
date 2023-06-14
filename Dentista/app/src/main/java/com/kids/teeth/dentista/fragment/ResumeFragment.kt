@@ -35,13 +35,15 @@ class ResumeFragment : Fragment() {
 
         val args = this.arguments
 
+        binding.etResume.setText(args?.getString("resume"))
+
         binding.btnBackResumeSignUp.setOnClickListener {
             val bundle = passData(args)
 
             Log.w("ResumeFragment", "BACK: name = ${bundle.getString("name")} | phone = ${bundle.getString("phone")} | email = ${bundle.getString("email")} | password = ${bundle.getString("password")}")
 
 
-            findNavController().navigate(R.id.action_ResumeFragment_to_SignUpFragment, bundle)
+            findNavController().navigate(R.id.action_ResumeFragment_to_SignUpFragment, args)
         }
 
         binding.btnConcludeResume.setOnClickListener {

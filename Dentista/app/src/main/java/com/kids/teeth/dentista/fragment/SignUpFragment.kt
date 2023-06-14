@@ -126,6 +126,8 @@ class SignUpFragment : Fragment(){
         binding.btnResumeSignUp.setOnClickListener {
             val bundle = passData()
 
+            bundle.putString("resume", args?.getString("resume"))
+
             Log.w("SingUpFragment", "name = ${bundle.getString("name")} | phone = ${bundle.getString("phone")} | email = ${bundle.getString("email")} | password = ${bundle.getString("password")}")
 
             findNavController().navigate(R.id.action_SignUpFragment_to_ResumeFragment, bundle)
