@@ -28,9 +28,14 @@ class SignInActivity : AppCompatActivity() {
         Log.w("SingInActivity", "navController - $navController")
 
         val action = intent.action
-        if (action == "OPEN_FRAGMENT") {
+        if (action == "OPEN_FRAGMENT_EMERCIES_LIST") {
             Log.w("SingInActivity", "abrindo EmergenciesListFragment")
             navController.navigate(R.id.EmergenciesListFragment)
+        }
+
+        if (action == "OPEN_FRAGMENT_EMERGENCY_IN_PROGRESS") {
+            Log.w("SingInActivity", "abrindo EmergencyInProgress")
+            navController.navigate(R.id.EmergencyInProgressFragment)
         }
 
     }

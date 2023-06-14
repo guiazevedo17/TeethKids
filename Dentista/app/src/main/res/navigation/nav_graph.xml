@@ -216,6 +216,19 @@
 
     </fragment>
 
+    <!-- Emergência em Andamento -->
+    <fragment
+        android:id="@+id/EmergencyInProgressFragment"
+        android:name="com.kids.teeth.dentista.fragment.EmergencyInProgressFragment"
+        android:label="Emergência em Andamento"
+        tools:layout="@layout/fragment_emergency_in_progress">
+
+        <action
+            android:id="@+id/action_EmergencyInProgressFragment_to_ProfileFragment"
+            app:destination="@id/ProfileFragment"/>
+
+    </fragment>
+
     <!-- Minha Reputação -->
     <fragment
         android:id="@+id/ReputationProfileFragment"

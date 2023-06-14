@@ -3,6 +3,7 @@ package com.kids.teeth.dentista.fragment
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Picture
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -126,6 +127,7 @@ class SignUpFragment : Fragment(){
             val Password = binding.etPasswordSignUp.text.toString()
             val PasswordConfirm = binding.etConfPasswordSignUp.text.toString()
             val Resume = resume ?: ""
+            val Picture = imgUrl
 
             if (confirmPassword(Password, PasswordConfirm)) {
                 if (fieldNotNull(Name, Phone, Email, Password, PasswordConfirm)) {
@@ -146,7 +148,7 @@ class SignUpFragment : Fragment(){
                             }
                             if (uid != null) {
 
-                                storeFcmToken(Name, Phone, Email, Password, Resume, uid)
+                                storeFcmToken(Name, Phone, Email, Password, Resume, uid, "https://firebasestorage.googleapis.com/v0/b/teethkids-d10a1.appspot.com/o/1686332175484.jpeg?alt=media&token=e5c285c1-a2d5-4a3f-bd48-ba3a420d0f2d&_gl=1*12u7gf0*_ga*MTE0ODQxMTA0Ny4xNjgwMTE1OTA2*_ga_CW55HF8NVT*MTY4NjcxNTcwOS43MS4xLjE2ODY3MTc1NzAuMC4wLjA.")
 
                                 for (address in AddressesDao.searchAll()){
                                     address.dentistId = uid

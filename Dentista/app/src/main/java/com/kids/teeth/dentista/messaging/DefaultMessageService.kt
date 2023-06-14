@@ -28,10 +28,17 @@ class DefaultMessageService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         val msgData = remoteMessage.data
         if(msgData["text"] == "emergencyUpdated"){
-            val msg = msgData["id"]
+            val msg = "Nova Emergência!"
+
+            showNotificationEmergenciesList(msg)
+        }
+
+        if(msgData["text"] == "acceptedDentist"){
+            val msg = "Você foi Escolhido para Realizar uma Emergência!"
+
             docID = msgData["id"]
 
-            showNotification(msg!!)
+            showNotificationEmergencyInProgress(msg)
         }
 
     }
@@ -49,10 +56,34 @@ class DefaultMessageService : FirebaseMessagingService() {
         )
 
     }
-        private fun showNotification(messageBody: String) {
+        private fun showNotificationEmergenciesList(messageBody: String) {
         val intent = Intent(this, SignInActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.action = "OPEN_FRAGMENT"
+        intent.action = "OPEN_FRAGMENT_EMERCIES_LIST"
+        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+            PendingIntent.FLAG_IMMUTABLE)
+        val channelId = getString(R.string.default_notification_channel_id)
+        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.logo)
+            .setContentTitle(getString(R.string.fcm_default_title_message))
+            .setContentText(messageBody)
+            .setAutoCancel(true)
+            .setSound(defaultSoundUri)
+            .setContentIntent(pendingIntent)
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        // Since android Oreo notification channel is needed.
+        val channel = NotificationChannel(channelId,
+            "Channel human readable title",
+            NotificationManager.IMPORTANCE_DEFAULT)
+        notificationManager.createNotificationChannel(channel)
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+    }
+
+    private fun showNotificationEmergencyInProgress(messageBody: String) {
+        val intent = Intent(this, SignInActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.action = "OPEN_FRAGMENT_EMERGENCY_IN_PROGRESS"
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
             PendingIntent.FLAG_IMMUTABLE)
         val channelId = getString(R.string.default_notification_channel_id)
