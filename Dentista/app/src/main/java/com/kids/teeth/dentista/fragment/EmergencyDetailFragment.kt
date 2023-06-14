@@ -81,11 +81,14 @@ class EmergencyDetailFragment : Fragment() {
         if (currentUser != null) {
             binding.btnAcceptEmergency.setOnClickListener {
 
-                val timestamp = Timestamp.now()
-//                val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
-//                val formattedDate = sdf.format(timestamp)
+                registerActionedEmergency(emergencyId as String, currentUser.uid, "accepted")
 
-                registerAcceptedEmergency(emergencyId as String, currentUser.uid, timestamp)
+                findNavController().navigate(R.id.action_EmergencyDetailFragment_to_EmergenciesListFragment)
+            }
+
+            binding.btnDeclineEmergency.setOnClickListener {
+
+                registerActionedEmergency(emergencyId as String, currentUser.uid, "declined")
 
                 findNavController().navigate(R.id.action_EmergencyDetailFragment_to_EmergenciesListFragment)
             }
@@ -94,20 +97,20 @@ class EmergencyDetailFragment : Fragment() {
         return binding.root
     }
 
-    private fun registerAcceptedEmergency(Emergency: String, Dentist: String, Date: Timestamp) {
+    private fun registerActionedEmergency(Emergency: String, Dentist: String, action: String) {
         functions = Firebase.functions("southamerica-east1")
 
         val emergency = hashMapOf(
             "emergencyId" to Emergency,
             "dentistId" to Dentist,
-            "date" to Date
+            "action" to action
         )
 
-        functions.getHttpsCallable("setAccepted")
+        functions.getHttpsCallable("setActions")
             .call(emergency)
             .addOnSuccessListener { result ->
                 val resposta = result.data.toString()
-                Log.d("registerAcceptAccount", "Result : ${resposta}")
+                Log.d("registerActionedEmergency", "Result : ${resposta}")
             }
     }
 

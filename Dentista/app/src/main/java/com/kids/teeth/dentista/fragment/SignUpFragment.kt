@@ -134,6 +134,7 @@ class SignUpFragment : Fragment(){
                                 storeFcmToken(Name, Phone, Email, Password, Resume, uid)
 
                                 for (address in AddressesDao.searchAll()){
+                                    address.dentistId = uid
                                     registerAddress(address)
                                 }
 
