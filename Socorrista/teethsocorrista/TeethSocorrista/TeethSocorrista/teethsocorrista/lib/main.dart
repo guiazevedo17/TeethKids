@@ -1,25 +1,31 @@
 import 'dart:async';
+
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
+//import geolocator
+import 'package:geolocator/geolocator.dart';
 
 //imports do firebase
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
-//import do firebase auth
 import 'package:firebase_auth/firebase_auth.dart';
-
-//import do firebase storage
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+//import permission
+import 'package:permission_handler/permission_handler.dart';
 
-//import 'package:intl/intl.dart';
+//Import do rating bar
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+//import para http
 
 final List<CameraDescription> camerasList = [];
 
@@ -30,12 +36,25 @@ class Globals{
   static String? fcmToken = '';
   static List<String> ids = [];
   static VoidCallback? onIdsUpdated;
-
+  static double? latitude;
+  static double? longitude;
+  static String? name;
   static void addItem(String item) {
     ids.add(item);
     if (onIdsUpdated != null) {
       onIdsUpdated!();
     }
+  }
+}
+Future<void> callFirestoreFunction(Uri url,Map<String, dynamic> requestBody,String functionName) async {
+ 
+  HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'southamerica-east1').httpsCallable(functionName);
+
+  try {
+    await callable.call(requestBody);
+    print("mensagem enviada");
+  } on FirebaseFunctionsException catch (error) {
+    print('erro');
   }
 }
 
@@ -52,37 +71,120 @@ void main() async {
   Globals.userCredential = await FirebaseAuth.instance.signInAnonymously();
   Globals.fcmToken = await FirebaseMessaging.instance.getToken();
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    String id = message.data['id'];
-    Globals.addItem(id);
-    print("ID:${message.data['id']}");
-  });
-
   FirebaseMessaging.instance.onTokenRefresh
       .listen((fcmToken) {
     // TODO: If necessary send token to application server.
 
-    // Note: This callback is fired at each app startup and whenever a new
-    // token is generated.
+
+    final Map<String, dynamic> requestBody = {
+      'fcmToken': fcmToken,
+      'userId': Globals.userCredential?.user?.uid,
+      'collection':'emergencies'
+    };
+    final uri = Uri.parse('https://southamerica-east1-teethkids-d10a1.cloudfunctions.net/setToken');
+    const functionName = 'setToken';
+    callFirestoreFunction(uri, requestBody,functionName);
   })
       .onError((err) {
     // Error getting token.
   });
 
-  runApp(const MyApp());
 
+
+  runApp(MyApp());
+
+}
+class PermissionScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Permissões'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Permissão requerida não concedida',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              child: const Text('Conceder Permissão'),
+              onPressed: () {
+                openAppSettings();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+void requestPermissions(BuildContext context) async {
+  Map<Permission, PermissionStatus> status = await [
+    Permission.location,
+    Permission.locationAlways,
+    Permission.locationWhenInUse,
+
+  ].request();
+
+  if (status[Permission.location]!.isGranted) {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    Globals.latitude = position.latitude;
+    Globals.longitude = position.longitude;
+  } else {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PermissionScreen()),
+    );
+  }
 }
 
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  void handleFirebaseMessage(BuildContext context,RemoteMessage message) {
+    print("Mensagem recebida");
+
+    if (message.data['text'] == 'accepted') {
+      String id = message.data['id'];
+      Globals.addItem(id);
+      print("ID:${message.data['id']}");
+    }
+    if (message.data['text'] == 'rating') {
+      MyApp.navigatorKey.currentState?.push(
+        MaterialPageRoute(builder: (context) => Avaliacao(message.data['id'])),
+      );
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    // ...
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      handleFirebaseMessage(context,message);
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: MyApp.navigatorKey,
       title: 'Minha Aplicação',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.orange
       ),
       home: AbrirChamado(), // Definindo a tela inicial
     );
@@ -102,16 +204,115 @@ class Identificacao extends StatelessWidget {
           title: const Text(
             appTitle,
           ),
-          backgroundColor: Color.fromARGB(255, 255, 140, 0),
+          backgroundColor: const Color.fromARGB(255, 255, 140, 0),
         ),
         body: MyCustomForm(),
       ),
     );
   }
 }
+class Avaliacao extends StatefulWidget {
+  final String data;
+  Avaliacao(this.data);
+
+  @override
+  _AvaliacaoState createState() => _AvaliacaoState();
+}
+
+class _AvaliacaoState extends State<Avaliacao> {
+  double rating = 0;
+  TextEditingController messageController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final id = widget.data;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Avaliação',
+        style: TextStyle(color :Colors.white),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Avalie o Atendimento',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 16),
+            RatingBar.builder(
+              initialRating: rating,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemSize: 50,
+              unratedColor: Colors.grey,
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (newRating) {
+                setState(() {
+                  rating = newRating;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Deixe uma mensagem:',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: messageController,
+              decoration: const InputDecoration(
+                hintText: 'Digite sua mensagem (opcional)',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: ()  async{
+                 final Map<String, dynamic> requestBody = {
+                   'rating': rating,
+                   'message': messageController.text,
+                   'id' : id,
+                   'name': Globals.name,
+                 };
+                 final uri = Uri.parse('https://southamerica-east1-teethkids-d10a1.cloudfunctions.net/sendRating');
+                 const functionName = 'sendRating';
+               await callFirestoreFunction(uri, requestBody,functionName);
+              },
+              child: const Text('Enviar Avaliação',
+              style: TextStyle(
+                  color: Colors.white
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 
-class AbrirChamado extends StatelessWidget {
+class AbrirChamado extends StatefulWidget {
+  @override
+  _AbrirChamadoState createState() => _AbrirChamadoState();
+}
+
+class _AbrirChamadoState extends  State<AbrirChamado> {
+
+  @override
+  void initState() {
+    super.initState();
+    requestPermissions(context);
+  }
 
   Future<bool> checkDocument() async {
     final db = FirebaseFirestore.instance;
@@ -154,7 +355,7 @@ class AbrirChamado extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: const Text(appTitle),
-          backgroundColor: Color.fromARGB(255, 255, 140, 0),
+          backgroundColor: const Color.fromARGB(255, 255, 140, 0),
         ),
         body: Builder(
           builder: (BuildContext builderContext) {
@@ -177,12 +378,12 @@ class AbrirChamado extends StatelessWidget {
                         );
                       }
                     },
-                    child: Text('Iniciar Chamado'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 255, 140, 0),
+                      backgroundColor: const Color.fromARGB(255, 255, 140, 0),
                     ),
+                    child: const Text('Iniciar Chamado'),
                   ),
-                  SizedBox(height: 16), // Espaçamento entre os botões
+                  const SizedBox(height: 16), // Espaçamento entre os botões
                   ElevatedButton(
                     onPressed: () async {
                       bool docExistis = await checkDocument();
@@ -201,10 +402,10 @@ class AbrirChamado extends StatelessWidget {
                       }
 
                     },
-                    child: Text('Vizualizar Socorro'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 255, 140, 0),
+                      backgroundColor: const Color.fromARGB(255, 255, 140, 0),
                     ),
+                    child: const Text('Vizualizar Socorro'),
                   ),
                 ],
               ),
@@ -236,38 +437,59 @@ class FirstRoute extends StatelessWidget {
   }
 }
 
-class MyCustomForm extends StatelessWidget {
-
+class MyCustomForm extends StatefulWidget {
+  @override
+  _MyCustomFormState createState() => _MyCustomFormState();
+}
+class _MyCustomFormState extends State<MyCustomForm> {
+  double uploadProgress = 0.0;
 
   Future<void> uploadImage(List<String> imagePaths) async {
     try {
-
       final storage = FirebaseStorage.instance;
+      int totalImages = imagePaths.length;
+      int uploadedImages = 0;
 
-      for (String path in imagePaths){
+      for (String path in imagePaths) {
         File imageFile = File(path);
         final storageRef = storage.ref().child('${DateTime.now().toIso8601String()}.jpg');
-        await storageRef.putFile(imageFile);
-        final downloadURL =  await storageRef.getDownloadURL();
+        final uploadTask = storageRef.putFile(imageFile);
+
+        uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+          uploadedImages++;
+          uploadProgress = uploadedImages / totalImages * 100;
+
+          // Atualiza a tela para refletir o novo valor do progresso
+          setState(() {});
+        });
+
+        await uploadTask;
+        final downloadURL = await storageRef.getDownloadURL();
         Globals.downloadURL.add(downloadURL);
       }
+
       Globals.imagesPath.clear();
       print('Imagem enviada com sucesso');
     } catch (e) {
-
       print('Error $e');
     }
   }
+
+
+
   Future<void> updateColecao(String nomeController, String telefoneController) async {
     final db = FirebaseFirestore.instance;
     final id = Globals.userCredential?.user?.uid;
     Timestamp timeStamp = Timestamp.now();
+
     if (id != null) {
       Map<String, dynamic> update = {
         'name': nomeController,
         'phone': telefoneController,
         'images': Globals.downloadURL,
         'data' : timeStamp,
+        'latitude' : Globals.latitude,
+        'longitude':Globals.longitude
       };
 
       await db.collection('emergencies').doc(id).set(update, SetOptions(merge: true));
@@ -281,7 +503,8 @@ class MyCustomForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final nomeController = TextEditingController();
     final telefoneController = TextEditingController();
-    return Column(
+    return SingleChildScrollView(
+        child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
@@ -323,7 +546,6 @@ class MyCustomForm extends StatelessWidget {
           alignment: Alignment.center,
           margin: const EdgeInsets.only(bottom: 40, top: 2),
           child: ElevatedButton(
-            child: const Text('Tirar Foto'),
             onPressed: () {
               Navigator.push(
                 context,
@@ -332,6 +554,7 @@ class MyCustomForm extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
+            child: const Text('Tirar Foto'),
           ),
         ),
         const Padding(
@@ -342,7 +565,6 @@ class MyCustomForm extends StatelessWidget {
           alignment: Alignment.center,
           margin: const EdgeInsets.only(bottom: 40, top: 2),
           child: ElevatedButton(
-            child: const Text('Tirar Foto'),
             onPressed: () {
               Navigator.push(
                 context,
@@ -351,6 +573,7 @@ class MyCustomForm extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
+            child: const Text('Tirar Foto'),
           ),
         ),
         const Padding(
@@ -361,7 +584,6 @@ class MyCustomForm extends StatelessWidget {
           alignment: Alignment.center,
           margin: const EdgeInsets.only(bottom: 40, top: 2),
           child: ElevatedButton(
-            child: const Text('Tirar Foto'),
             onPressed: () {
               Navigator.push(
                 context,
@@ -370,13 +592,29 @@ class MyCustomForm extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
+            child: const Text('Tirar Foto'),
           ),
         ),
         Container(
           alignment: Alignment.bottomCenter,
-          margin:
-          const EdgeInsets.only(bottom: 40, left: 10, right: 10, top: 89),
-          child: ElevatedButton(
+          margin: const EdgeInsets.only(bottom: 40, left: 10, right: 10, top: 89),
+          child: Column(
+          children:[
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(horizontal: 40.0),
+              height: 16.0,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: LinearProgressIndicator(
+                value: uploadProgress / 100,
+                backgroundColor: Colors.transparent,
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
+              ),
+            ),
+            ElevatedButton(
             onPressed: () async {
               if(Globals.imagesPath.length < 3 || nomeController.text.isEmpty || telefoneController.text.isEmpty ){
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -385,6 +623,7 @@ class MyCustomForm extends StatelessWidget {
                   ),
                 );
               }else {
+                Globals.name = nomeController.text;
                 await uploadImage(Globals.imagesPath);
                 await updateColecao(nomeController.text, telefoneController.text);
 
@@ -400,8 +639,11 @@ class MyCustomForm extends StatelessWidget {
               children: [Text('Solicitar')],
             ),
           ),
+          ],
         ),
-      ],
+        ),
+      ]
+    ),
     );
   }
 }
@@ -424,7 +666,7 @@ class _EmergenciesListState extends State <EmergenciesList> {
   }
 
   void listenToChanges() {
-    Globals.onIdsUpdated = updateItems; // Atribui o método updateItems ao callback
+    Globals.onIdsUpdated = updateItems;
   }
 
   void updateItems() {
@@ -447,16 +689,16 @@ class _EmergenciesListState extends State <EmergenciesList> {
           appBar: AppBar(
             centerTitle: true,
             title: const Text('Socorro Aberto'),
-            backgroundColor: Color.fromARGB(255, 255, 140, 0),
+            backgroundColor: const Color.fromARGB(255, 255, 140, 0),
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.push(context,MaterialPageRoute(builder: (context) => AbrirChamado()) );
 
               },
             ),
           ),
-          body: Center(
+          body: const Center(
             child: Text('Aguardando Dentistas'),
           ),
         ),
@@ -468,9 +710,9 @@ class _EmergenciesListState extends State <EmergenciesList> {
           appBar: AppBar(
             centerTitle: true,
             title: const Text('Socorro Aberto'),
-            backgroundColor: Color.fromARGB(255, 255, 140, 0),
+            backgroundColor: const Color.fromARGB(255, 255, 140, 0),
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.push(context,MaterialPageRoute(builder: (context) => AbrirChamado()) );
               },
@@ -483,15 +725,10 @@ class _EmergenciesListState extends State <EmergenciesList> {
                 onTap: () async {
                   String idDentist = items[index];
                   Data data = await getData(idDentist);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetalhesScreen(data.name),
-                    ),
-                  );
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DetalhesScreen(data.name,data.url,index,data.fcmToken),),);
                 },
                 child: ListTile(
-                  title: Text(items[index]),
+                  title: Text("Dentista:${index+1}"),
                 ),
               );
             },
@@ -503,10 +740,10 @@ class _EmergenciesListState extends State <EmergenciesList> {
 }
 class Data {
   final String name;
-  //final String phone;
-  //final String url;
+  final String url;
+  final String fcmToken;
 
-  Data({required this.name});
+  Data({required this.name , required this.url,required this.fcmToken});
 }
 
 Future<Data> getData(String id) async {
@@ -519,39 +756,72 @@ Future<Data> getData(String id) async {
   // print('SnapshotData:${snapshot.data()}');
   // print('\n-----------------------');
 
+  String fcmToken = snapshot.data()!['fcmToken'];
   String name = snapshot.data()!['name'];
   // String phone = snapshot.data()!['string2'];
-  //String url = snapshot.data()!['url'];
+  String url = snapshot.data()!['picture'];
 
-  return Data(name: name);
+  return Data(name: name , url: url , fcmToken:fcmToken);
 }
 class DetalhesScreen extends StatelessWidget {
   final String string1;
-  //final String imageUrl ='';
-  DetalhesScreen(this.string1);
+  final String imageUrl;
+  final int index;
+  final String fcmToken;
+  DetalhesScreen(this.string1,this.imageUrl,this.index,this.fcmToken);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalhes'),
+        title: const Text('Detalhes'),
+       backgroundColor: const Color.fromARGB(255, 255, 140, 0),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Nome: $string1'),
-            SizedBox(height: 16),
-            //Image.network(imageUrl), //Imagem
-            //SizedBox(height: 16),
+            const SizedBox(height: 16),
+            Image.network(
+              imageUrl,
+              width: 300, // Define a largura da imagem
+              height: 300, // Define a altura da imagem
+              fit: BoxFit.contain, // Define como a imagem será ajustada ao Container
+            ),
+            const SizedBox(height: 16),
+            const Text('Avaliação : 9/10'),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Funcionamento do Botão
+                print("fcmToken: ${fcmToken}");
+                final Map<String, dynamic> requestBody = {
+                  'fcmToken':fcmToken ,
+                  'messageType': 'acceptedDentist',
+                  'uid': Globals.userCredential?.user?.uid,
+                };
+                final uri = Uri.parse('https://southamerica-east1-teethkids-d10a1.cloudfunctions.net/sendMessageToDentist');
+                const functionName = 'sendMessageToDentist';
+                callFirestoreFunction(uri, requestBody, functionName);
+
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
-              child: Text('Selecionar Dentista'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 255, 140, 0),
+                backgroundColor: const Color.fromARGB(255, 255, 140, 0),
               ),
+              child: const Text('Selecionar Dentista'),
+            ),
+            ElevatedButton(
+              onPressed: (){
+                Globals.ids.removeAt(index);
+                Globals.onIdsUpdated!();
+                Navigator.pop(context);
+            },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 255, 140, 0),
+              ),
+              child: const Text('Excluir Dentista'),
             ),
           ],
         ),
@@ -593,7 +863,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     super.dispose();
   }
 
-  Future<void> saveImageToGallery(String imagePath) async {
+  Future<void> saveImageToGallery(BuildContext context,String imagePath) async {
     final appDirectory = await getTemporaryDirectory();
     final fileName = DateTime.now().toIso8601String();
     final path = '${appDirectory.path}/$fileName.jpg';
@@ -612,7 +882,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tirar uma foto')),
+      appBar: AppBar(
+          title: const Text('Tirar uma foto'),
+          backgroundColor: const Color.fromARGB(255, 255, 140, 0),
+      ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
@@ -631,7 +904,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
             if (!mounted) return;
 
-            await saveImageToGallery(image.path);
+            await saveImageToGallery(context,image.path);
 
             Navigator.push(
               context,
@@ -654,7 +927,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
 class DisplayImageScreen extends StatelessWidget {
   final String imagePath;
-
+  bool isButtonDisabled = false;
 
   DisplayImageScreen({required this.imagePath});
 
@@ -674,7 +947,8 @@ class DisplayImageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Imagem Capturada'),
+        title: const Text('Imagem Capturada'),
+        backgroundColor: const Color.fromARGB(255, 255, 140, 0),
       ),
       body: Center(
         child: Column(
@@ -684,25 +958,26 @@ class DisplayImageScreen extends StatelessWidget {
               File(imagePath),
               fit: BoxFit.contain,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
+              onPressed: isButtonDisabled ? null : () {
+                isButtonDisabled = true;
                 Globals.imagesPath.add(imagePath);
 
                 Navigator.pop(context);
                 Navigator.pop(context);
 
               },
-              child: Text('Usar foto'),
+              child: const Text('Usar foto'),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             OutlinedButton(
               onPressed: () {
                 deleteImage(imagePath);
                 Navigator.pop(context);
 
               },
-              child: Text('Tirar outra foto'),
+              child: const Text('Tirar outra foto'),
             ),
           ],
         ),

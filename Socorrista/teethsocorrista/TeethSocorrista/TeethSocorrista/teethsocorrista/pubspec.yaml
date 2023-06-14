@@ -45,6 +45,12 @@ dependencies:
   cloud_firestore: ^4.8.0
   firebase_messaging: ^14.6.2
   image_picker: ^0.8.3
+  geolocator: ^9.0.2
+  permission_handler: ^10.3.0
+  flutter_rating_bar: ^4.0.1
+  cloud_functions: ^4.3.3
+
+
 
 
 dev_dependencies:
