@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.MapsFragment">
 
    <fragment
@@ -11,6 +12,27 @@
        android:id="@+id/map_fragment"
        android:tag="map_fragment_tag"
        android:layout_width="match_parent"
-       android:layout_height="match_parent" />
+       android:layout_height="match_parent"
+       map:layout_constraintStart_toStartOf="parent"
+       map:layout_constraintTop_toTopOf="parent"
+       map:layout_constraintEnd_toEndOf="parent"/>
 
-</FrameLayout>
+   <androidx.appcompat.widget.AppCompatButton
+       android:id="@+id/btnSendLatLng"
+       android:layout_width="0dp"
+       android:layout_height="wrap_content"
+       android:layout_marginHorizontal="30dp"
+       android:background="@color/tk_blue"
+       android:paddingHorizontal="30dp"
+       android:paddingVertical="15dp"
+       android:layout_marginBottom="20dp"
+       android:text="Enviar localização"
+       android:textAllCaps="false"
+       android:textColor="@color/white"
+       android:textSize="20sp"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

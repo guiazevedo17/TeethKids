@@ -15,6 +15,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.kids.teeth.dentista.databinding.FragmentMapsBinding
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
@@ -26,21 +28,21 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-        : View? {
-        _binding = FragmentMapsBinding
-            .inflate(
-                inflater,
-                container,
-                false
-            )
+    private lateinit var db: FirebaseFirestore
 
+    private lateinit var auth: FirebaseAuth
+
+    private var currentLatLng: LatLng? = null
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentMapsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         locationRequest = LocationRequest.create()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -48,8 +50,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult?.lastLocation?.let { location ->
-                    val latLng = LatLng(location.latitude, location.longitude)
-                    map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+                    currentLatLng = LatLng(location.latitude, location.longitude)
+                    map.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng))
                 }
             }
         }
@@ -58,11 +60,25 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         if (mapFragment != null) {
             mapFragment.getMapAsync(this)
         }
+
+        binding.btnSendLatLng.setOnClickListener {
+            val uid = auth.currentUser?.uid
+            val latLng = currentLatLng
+            if (uid != null && latLng != null) {
+                db.collection("dentists").document(uid)
+                    .update("latLng", latLng)
+                    .addOnSuccessListener {
+                        // Atualização bem-sucedida
+                    }
+                    .addOnFailureListener { e ->
+                        // Tratamento de falha na atualização
+                    }
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        // Adicione aqui qualquer configuração adicional do mapa, se necessário
 
         if (isLocationPermissionGranted()) {
             enableMyLocation()
@@ -71,7 +87,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             requestLocationPermission()
         }
     }
-
 
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
@@ -103,11 +118,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         )
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 enableMyLocation()
