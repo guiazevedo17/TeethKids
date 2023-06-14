@@ -37,10 +37,10 @@
     <!-- Foto de Perfil -->
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivProfilePicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:padding="10dp"
-        android:src="@drawable/ic_person"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@id/tvNameProfile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

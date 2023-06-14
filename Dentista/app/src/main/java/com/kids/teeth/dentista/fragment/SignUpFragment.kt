@@ -22,7 +22,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.firebase.auth.FirebaseAuth
@@ -87,8 +91,10 @@ class SignUpFragment : Fragment(){
         val imgUrl = args?.getString("imageUrl")
 
         if(imgUrl != null) {
-            capturedImageUri = Uri.parse(imgUrl)
-            binding.ivProfilePictureSignUp.setImageURI(capturedImageUri)
+            Glide.with(this)
+                .load(imgUrl)
+                .apply(RequestOptions.circleCropTransform()) // Aplica a transformação de círculo
+                .into(binding.ivProfilePictureSignUp)
         }
 
         val btnBorder = GradientDrawable()
@@ -122,13 +128,22 @@ class SignUpFragment : Fragment(){
             val Resume = resume ?: ""
 
             if (confirmPassword(Password, PasswordConfirm)) {
-                if (fieldNotNull(Name, Phone, Email, Password, PasswordConfirm, Resume)) {
+                if (fieldNotNull(Name, Phone, Email, Password, PasswordConfirm)) {
                     auth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener { register ->
                         if (register.isSuccessful) {
                             val snackbar = Snackbar.make(view, "Sucesso ao cadastrar usuário!", Snackbar.LENGTH_SHORT)
                             snackbar.setBackgroundTint(Color.BLUE)
                             snackbar.show()
                             val uid = auth.currentUser?.uid
+                            capturedImageUri?.let { it1 ->
+                                uploadImage(it1).addOnSuccessListener { downloadUri ->
+                                    val imageUrl = downloadUri.toString()
+                                    ImageHelper.imageUrl = imageUrl
+                                    // Aqui você pode usar a URL da imagem conforme necessário
+                                }.addOnFailureListener { exception ->
+
+                                }
+                            }
                             if (uid != null) {
 
                                 storeFcmToken(Name, Phone, Email, Password, Resume, uid)
@@ -138,6 +153,12 @@ class SignUpFragment : Fragment(){
                                     registerAddress(address)
                                 }
 
+                                    ImageHelper.imageUrl?.let { it1 ->
+                                        storeFcmToken(Name, Phone, Email, Password, Resume, uid,
+                                            it1
+                                        )
+
+                                    }
                                 AddressesDao.clearAll()
 
                                 capturedImageUri?.let { it1 -> uploadImage(it1) }
@@ -194,15 +215,15 @@ class SignUpFragment : Fragment(){
     }
 
     // Verifica se existe algum campo nulo
-    private fun fieldNotNull(Name: String, Phone: String, Email: String, Password: String, PasswordConfirm: String, Resume: String): Boolean {
+    private fun fieldNotNull(Name: String, Phone: String, Email: String, Password: String, PasswordConfirm: String): Boolean {
 
-        if(Name.isEmpty() || Phone.isEmpty() || Email.isEmpty() || Password.isEmpty() || PasswordConfirm.isEmpty() || Resume.isEmpty()){
+        if(Name.isEmpty() || Phone.isEmpty() || Email.isEmpty() || Password.isEmpty() || PasswordConfirm.isEmpty()){
             return false
         }
         return true
     }
 
-    private fun registerAccount(Name: String, Phone: String, Email: String, Password: String, Resume: String, Uid: String, Availability: Boolean,Fcmtoken: String) {
+    private fun registerAccount(Name: String, Phone: String, Email: String, Password: String, Resume: String, Uid: String, Availability: Boolean,Fcmtoken: String, Picture: String) {
 
         functions = Firebase.functions("southamerica-east1")
 
@@ -215,7 +236,8 @@ class SignUpFragment : Fragment(){
             "resume" to Resume,
             "availability" to Availability,
             "fcmToken" to Fcmtoken,
-            "userId" to Uid
+            "userId" to Uid,
+            "picture" to Picture
         )
 
         functions.getHttpsCallable("setUser")
@@ -226,19 +248,19 @@ class SignUpFragment : Fragment(){
             }
     }
 
-    private fun storeFcmToken(Name: String, Phone: String, Email: String, Password: String, Resume: String,Uid: String){
+    private fun storeFcmToken(Name: String, Phone: String, Email: String, Password: String, Resume: String,Uid: String, Picture: String){
         Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 return@OnCompleteListener
             }
             // guardar esse token.
             var fcmToken = task.result
-            registerAccount(Name,Phone,Email,Password,Resume, Uid,false,fcmToken)
+            registerAccount(Name,Phone,Email,Password,Resume, Uid,false,fcmToken, Picture)
 
         })
     }
 
-    private fun uploadImage(imageUri: Uri) {
+    private fun uploadImage(imageUri: Uri): Task<Uri> {
         val storage = FirebaseStorage.getInstance()
         val storageRef = storage.reference
 
@@ -248,6 +270,9 @@ class SignUpFragment : Fragment(){
         // Upload
         val uploadTask = imageRef.putFile(imageUri)
 
+        // Criar uma tarefa para obter a URL de download da imagem
+        val urlTask = TaskCompletionSource<Uri>()
+
         // Verificação do progresso de Upload
         uploadTask.addOnProgressListener { taskSnapshot ->
             val progress = (100 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
@@ -256,11 +281,16 @@ class SignUpFragment : Fragment(){
             imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
                 val imageUrl = downloadUri.toString()
                 ImageHelper.imageUrl = imageUrl
+                urlTask.setResult(downloadUri) // Definir o resultado da tarefa com a URL de download
             }
         }.addOnFailureListener { exception ->
             Log.e("ImageUploadError", "Imagem não foi carregada corretamente: $exception")
+            urlTask.setException(exception) // Definir a exceção como resultado da tarefa em caso de falha
         }
+
+        return urlTask.task // Retornar a tarefa para a URL de download da imagem
     }
+
 
     private fun registerAddress(address: Address) {
 
