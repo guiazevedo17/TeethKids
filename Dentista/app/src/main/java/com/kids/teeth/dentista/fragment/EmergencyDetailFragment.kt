@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
@@ -26,9 +27,9 @@ class EmergencyDetailFragment : Fragment() {
     private var _binding: FragmentEmergencyDetailBinding? = null
     private val binding: FragmentEmergencyDetailBinding get() = _binding!!
 
-    private lateinit var storage: FirebaseStorage
-    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
     private lateinit var functions: FirebaseFunctions
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +107,9 @@ class EmergencyDetailFragment : Fragment() {
             "action" to action
         )
 
+
+        db.collection
+
         functions.getHttpsCallable("setActions")
             .call(emergency)
             .addOnSuccessListener { result ->
@@ -137,7 +141,6 @@ class EmergencyDetailFragment : Fragment() {
                 Log.d("sendMessage", "Result : ${resposta}")
             }
     }
-
 
     private fun capitalizeWords(requesterName: String): String {
         val words = requesterName.split(" ")
