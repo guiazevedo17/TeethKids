@@ -225,7 +225,7 @@ class SignUpFragment : Fragment(){
         bundle.putString("phone", binding.etPhoneSignUp.text.toString())
         bundle.putString("email", binding.etEmailSignUp.text.toString())
         bundle.putString("password", binding.etPasswordSignUp.text.toString())
-        bundle.putString("confPassword", binding.etPasswordSignUp.text.toString())
+        bundle.putString("confPassword", binding.etConfPasswordSignUp.text.toString())
 
         return bundle
     }
