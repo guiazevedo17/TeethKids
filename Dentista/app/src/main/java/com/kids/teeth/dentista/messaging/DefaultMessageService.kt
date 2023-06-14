@@ -7,6 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.kids.teeth.dentista.R
@@ -14,19 +18,38 @@ import com.kids.teeth.dentista.activity.SignInActivity
 
 class DefaultMessageService : FirebaseMessagingService() {
 
+    private lateinit var functions: FirebaseFunctions
+    private lateinit var auth: FirebaseAuth
+
     companion object {
         var docID: String? = null
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         val msgData = remoteMessage.data
-        val msg = msgData["id"]
-        docID = msgData["id"]
+        if(msgData["text"] == "emergencyUpdated"){
+            val msg = msgData["id"]
+            docID = msgData["id"]
 
-        showNotification(msg!!)
+            showNotification(msg!!)
+        }
+
     }
 
-    private fun showNotification(messageBody: String) {
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+
+        functions = Firebase.functions("southamerica-east1")
+        val uid = auth.currentUser?.uid
+        val collection = "dentist"
+        val newTk = hashMapOf(
+            "fcmToken" to token,
+            "userId" to uid,
+            "colection" to collection,
+        )
+
+    }
+        private fun showNotification(messageBody: String) {
         val intent = Intent(this, SignInActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.action = "OPEN_FRAGMENT"

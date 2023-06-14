@@ -112,6 +112,30 @@ class EmergencyDetailFragment : Fragment() {
                 val resposta = result.data.toString()
                 Log.d("registerActionedEmergency", "Result : ${resposta}")
             }
+
+        sendMessage()
+    }
+
+    private fun sendMessage(){
+        functions = Firebase.functions("southamerica-east1")
+
+        val args = this.arguments
+        val fcmToken = args?.getString("fcmToken")
+        val dentistId = auth.currentUser?.uid
+
+        Log.d("EmergencyDetailFragment", "sendMessage - fcmToken = $fcmToken | dentistId = $dentistId")
+
+        val emergency = hashMapOf(
+            "fcmToken" to fcmToken,
+            "dentistId" to dentistId
+        )
+
+        functions.getHttpsCallable("sendMessage")
+            .call(emergency)
+            .addOnSuccessListener { result ->
+                val resposta = result.data.toString()
+                Log.d("sendMessage", "Result : ${resposta}")
+            }
     }
 
 
