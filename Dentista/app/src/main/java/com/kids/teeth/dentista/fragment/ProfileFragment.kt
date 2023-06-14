@@ -179,6 +179,9 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_ProfileFragment_to_ReputationFragment)
         }
 
+        binding.btnLocale.setOnClickListener {
+            findNavController().navigate(R.id.action_ProfileFragment_to_MapsFragment)
+        }
     }
 
 

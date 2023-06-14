@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dentista</string>
+    <string name="app_name">Teeth Kids</string>
 
     <string name="login">Entrar</string>
 
@@ -80,4 +80,5 @@
     <string name="take_picture">Tirar foto</string>
     <string name="sucess_cases">Casos Atendidos com Sucesso</string>
     <string name="feedbacks">Avaliações</string>
+    <string name="map_id">777f01b938db170d</string>
 </resources>

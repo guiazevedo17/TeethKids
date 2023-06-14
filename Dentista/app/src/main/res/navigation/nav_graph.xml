@@ -127,6 +127,9 @@
         <action
             android:id="@+id/action_ProfileFragment_to_ReputationFragment"
             app:destination="@id/ReputationProfileFragment"/>
+        <action
+            android:id="@+id/action_ProfileFragment_to_MapsFragment"
+            app:destination="@id/map_fragment"/>
 
     </fragment>
 
@@ -269,5 +272,13 @@
             app:destination="@id/SignUpFragment"/>
 
     </fragment>
+
+    <!--Localização -->
+    <fragment
+        android:id="@+id/map_fragment"
+        android:name="com.kids.teeth.dentista.fragment.MapsFragment"
+        android:label="Localização"
+        tools:layout="@layout/fragment_maps" />
+
 </navigation>
 
