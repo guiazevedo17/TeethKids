@@ -49,6 +49,7 @@ dependencies:
   permission_handler: ^10.3.0
   flutter_rating_bar: ^4.0.1
   cloud_functions: ^4.3.3
+  url_launcher: ^6.1.11
 
 
 

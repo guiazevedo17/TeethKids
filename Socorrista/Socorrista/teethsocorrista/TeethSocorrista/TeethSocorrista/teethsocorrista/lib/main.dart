@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'dart:io';
+//import 'dart:js_interop';
 
 import 'package:camera/camera.dart';
 
@@ -25,7 +26,8 @@ import 'package:permission_handler/permission_handler.dart';
 //Import do rating bar
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-//import para http
+//import para launcher
+import 'package:url_launcher/url_launcher.dart';
 
 final List<CameraDescription> camerasList = [];
 
@@ -39,6 +41,7 @@ class Globals{
   static double? latitude;
   static double? longitude;
   static String? name;
+  static String? token;
   static void addItem(String item) {
     ids.add(item);
     if (onIdsUpdated != null) {
@@ -47,14 +50,14 @@ class Globals{
   }
 }
 Future<void> callFirestoreFunction(Uri url,Map<String, dynamic> requestBody,String functionName) async {
- 
+
   HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'southamerica-east1').httpsCallable(functionName);
 
   try {
     await callable.call(requestBody);
     print("mensagem enviada");
   } on FirebaseFunctionsException catch (error) {
-    print('erro');
+    print('erro:${error}');
   }
 }
 
@@ -153,20 +156,45 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  void handleFirebaseMessage(BuildContext context,RemoteMessage message) {
+  void handleFirebaseMessage(BuildContext context,RemoteMessage message) async {
     print("Mensagem recebida");
 
     if (message.data['text'] == 'accepted') {
-      String id = message.data['id'];
-      Globals.addItem(id);
-      print("ID:${message.data['id']}");
+      final db = FirebaseFirestore.instance;
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await db.collection('dentists')
+          .doc(message.data['id']).get();
+
+      if(snapshot.data()!['fcmToken'] != null && snapshot.data()!['name'] !=null && snapshot.data()!['picture'] !=null ){
+        final id = message.data['id'];
+        Globals.addItem(id);
+        print("ID:${message.data['id']}");
+      }
     }
+    if(message.data['text'] == 'location'){
+      double latitude2 = double.parse(message.data['latitude']);
+      double longitude2 = double.parse(message.data['longitude']);
+      openGoogleMaps(Globals.latitude,Globals.longitude,latitude2,longitude2);
+    }
+
     if (message.data['text'] == 'rating') {
       MyApp.navigatorKey.currentState?.push(
         MaterialPageRoute(builder: (context) => Avaliacao(message.data['id'])),
       );
     }
   }
+  //latitude,lingitude ->latLng
+  void openGoogleMaps(double? latitude1, double? longitude1, double latitude2, double longitude2) async {
+    // URL para abrir o Google Maps com os locais
+    String googleMapsUrl = 'https://www.google.com/maps/dir/?api=1&origin=$latitude1,$longitude1&destination=$latitude2,$longitude2';
+
+    Uri googleMapsUri = Uri.parse(googleMapsUrl);
+    if (await canLaunchUrl(googleMapsUri)) {
+      await launchUrl(googleMapsUri);
+    } else {
+      throw 'Não foi possível abrir o Google Maps.';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -184,7 +212,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: MyApp.navigatorKey,
       title: 'Minha Aplicação',
       theme: ThemeData(
-        primarySwatch: Colors.orange
+          primarySwatch: Colors.orange
       ),
       home: AbrirChamado(), // Definindo a tela inicial
     );
@@ -220,16 +248,29 @@ class Avaliacao extends StatefulWidget {
 }
 
 class _AvaliacaoState extends State<Avaliacao> {
-  double rating = 0;
+  double rating = 0.0;
   TextEditingController messageController = TextEditingController();
 
+  Future<void> deleteEmergency () async{
+    final db = FirebaseFirestore.instance;
+    final colRef = await db.collection('emergencies');
+    final docRef = colRef.doc(Globals.userCredential?.user?.uid);
+
+    await docRef.delete();
+
+
+  }
   @override
   Widget build(BuildContext context) {
     final id = widget.data;
+    final double roundedRating = rating.roundToDouble(); // Nova variável arredondada
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Avaliação',
-        style: TextStyle(color :Colors.white),
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Avaliação',
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: Padding(
@@ -243,10 +284,10 @@ class _AvaliacaoState extends State<Avaliacao> {
             ),
             const SizedBox(height: 16),
             RatingBar.builder(
-              initialRating: rating,
+              initialRating: roundedRating, // Usando a nova variável arredondada
               minRating: 1,
               direction: Axis.horizontal,
-              allowHalfRating: true,
+              allowHalfRating: false,
               itemCount: 5,
               itemSize: 50,
               unratedColor: Colors.grey,
@@ -276,21 +317,28 @@ class _AvaliacaoState extends State<Avaliacao> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: ()  async{
-                 final Map<String, dynamic> requestBody = {
-                   'rating': rating,
-                   'message': messageController.text,
-                   'id' : id,
-                   'name': Globals.name,
-                 };
-                 final uri = Uri.parse('https://southamerica-east1-teethkids-d10a1.cloudfunctions.net/sendRating');
-                 const functionName = 'sendRating';
-               await callFirestoreFunction(uri, requestBody,functionName);
+              onPressed: () async {
+                final Map<String, dynamic> requestBody = {
+                  'rating': roundedRating.toInt(), // Convertendo novamente para inteiro
+                  'message': messageController.text,
+                  'id': id,
+                  'name': Globals.name,
+                };
+                final uri = Uri.parse(
+                    'https://southamerica-east1-teethkids-d10a1.cloudfunctions.net/sendRating');
+                const functionName = 'sendRating';
+                await callFirestoreFunction(uri, requestBody, functionName);
+
+                await deleteEmergency();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AbrirChamado()),
+                );
               },
-              child: const Text('Enviar Avaliação',
-              style: TextStyle(
-                  color: Colors.white
-                ),
+              child: const Text(
+                'Enviar Avaliação',
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -299,6 +347,7 @@ class _AvaliacaoState extends State<Avaliacao> {
     );
   }
 }
+
 
 
 class AbrirChamado extends StatefulWidget {
@@ -482,14 +531,18 @@ class _MyCustomFormState extends State<MyCustomForm> {
     final id = Globals.userCredential?.user?.uid;
     Timestamp timeStamp = Timestamp.now();
 
+    //latlong
+    Map<String, double?> latLng = {
+      "latitude": Globals.latitude,
+      "longitude": Globals.longitude
+    };
     if (id != null) {
       Map<String, dynamic> update = {
         'name': nomeController,
         'phone': telefoneController,
         'images': Globals.downloadURL,
         'data' : timeStamp,
-        'latitude' : Globals.latitude,
-        'longitude':Globals.longitude
+        'latLng' : latLng
       };
 
       await db.collection('emergencies').doc(id).set(update, SetOptions(merge: true));
@@ -504,146 +557,146 @@ class _MyCustomFormState extends State<MyCustomForm> {
     final nomeController = TextEditingController();
     final telefoneController = TextEditingController();
     return SingleChildScrollView(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: TextFormField(
-            autofocus: true,
-            controller: nomeController,
-            decoration: const InputDecoration(
-              labelText: 'Nome Solicitante',
-              labelStyle: TextStyle(color: Color.fromARGB(255, 255, 140, 0)),
-              border: UnderlineInputBorder(),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color.fromARGB(255, 255, 140, 0),
-                  )),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: TextFormField(
+                autofocus: true,
+                controller: nomeController,
+                decoration: const InputDecoration(
+                  labelText: 'Nome Solicitante',
+                  labelStyle: TextStyle(color: Color.fromARGB(255, 255, 140, 0)),
+                  border: UnderlineInputBorder(),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 255, 140, 0),
+                      )),
+                ),
+              ),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: TextFormField(
-            controller:telefoneController,
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Telefone',
-              labelStyle: TextStyle(color: Color.fromARGB(255, 255, 140, 0)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color.fromARGB(255, 255, 140, 0),
-                  )),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: TextFormField(
+                controller:telefoneController,
+                decoration: const InputDecoration(
+                  border: UnderlineInputBorder(),
+                  labelText: 'Telefone',
+                  labelStyle: TextStyle(color: Color.fromARGB(255, 255, 140, 0)),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 255, 140, 0),
+                      )),
+                ),
+              ),
             ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal:90, vertical: 8),
-          child: Text('Foto da Boca/Região acidentada'),
-        ),
-        Container(
-          alignment: Alignment.center,
-          margin: const EdgeInsets.only(bottom: 40, top: 2),
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TakePictureScreen()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
-            child: const Text('Tirar Foto'),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 90, vertical: 0),
-          child: Text('Foto do Documento do Solicitante'),
-        ),
-        Container(
-          alignment: Alignment.center,
-          margin: const EdgeInsets.only(bottom: 40, top: 2),
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TakePictureScreen()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
-            child: const Text('Tirar Foto'),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 135, vertical: 0),
-          child: Text('Foto com a criança'),
-        ),
-        Container(
-          alignment: Alignment.center,
-          margin: const EdgeInsets.only(bottom: 40, top: 2),
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TakePictureScreen()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
-            child: const Text('Tirar Foto'),
-          ),
-        ),
-        Container(
-          alignment: Alignment.bottomCenter,
-          margin: const EdgeInsets.only(bottom: 40, left: 10, right: 10, top: 89),
-          child: Column(
-          children:[
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal:90, vertical: 8),
+              child: Text('Foto da Boca/Região acidentada'),
+            ),
             Container(
               alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(horizontal: 40.0),
-              height: 16.0,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: LinearProgressIndicator(
-                value: uploadProgress / 100,
-                backgroundColor: Colors.transparent,
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
+              margin: const EdgeInsets.only(bottom: 40, top: 2),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TakePictureScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
+                child: const Text('Tirar Foto'),
               ),
             ),
-            ElevatedButton(
-            onPressed: () async {
-              if(Globals.imagesPath.length < 3 || nomeController.text.isEmpty || telefoneController.text.isEmpty ){
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Prencha todos os dados'),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 90, vertical: 0),
+              child: Text('Foto do Documento do Solicitante'),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(bottom: 40, top: 2),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TakePictureScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
+                child: const Text('Tirar Foto'),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 135, vertical: 0),
+              child: Text('Foto com a criança'),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(bottom: 40, top: 2),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TakePictureScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
+                child: const Text('Tirar Foto'),
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: const EdgeInsets.only(bottom: 40, left: 10, right: 10, top: 89),
+              child: Column(
+                children:[
+                  Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.symmetric(horizontal: 40.0),
+                    height: 16.0,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: LinearProgressIndicator(
+                      value: uploadProgress / 100,
+                      backgroundColor: Colors.transparent,
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
+                    ),
                   ),
-                );
-              }else {
-                Globals.name = nomeController.text;
-                await uploadImage(Globals.imagesPath);
-                await updateColecao(nomeController.text, telefoneController.text);
+                  ElevatedButton(
+                    onPressed: () async {
+                      if(Globals.imagesPath.length < 3 || nomeController.text.isEmpty || telefoneController.text.isEmpty ){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Prencha todos os dados'),
+                          ),
+                        );
+                      }else {
+                        Globals.name = nomeController.text;
+                        await uploadImage(Globals.imagesPath);
+                        await updateColecao(nomeController.text, telefoneController.text);
 
-                Navigator.push(context,MaterialPageRoute(builder: (context) => EmergenciesList()) );
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => EmergenciesList()) );
 
-              }
+                      }
 
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text('Solicitar')],
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 255, 140, 0)),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Text('Solicitar')],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          ],
-        ),
-        ),
-      ]
-    ),
+          ]
+      ),
     );
   }
 }
@@ -742,7 +795,6 @@ class Data {
   final String name;
   final String url;
   final String fcmToken;
-
   Data({required this.name , required this.url,required this.fcmToken});
 }
 
@@ -750,11 +802,6 @@ Future<Data> getData(String id) async {
   final db = FirebaseFirestore.instance;
 
   DocumentSnapshot<Map<String, dynamic>> snapshot = await db.collection('dentists').doc(id).get();
-  // print('-----------------------');
-  // print("Debug \n");
-  // print('String id:${id}');
-  // print('SnapshotData:${snapshot.data()}');
-  // print('\n-----------------------');
 
   String fcmToken = snapshot.data()!['fcmToken'];
   String name = snapshot.data()!['name'];
@@ -767,7 +814,7 @@ class DetalhesScreen extends StatelessWidget {
   final String string1;
   final String imageUrl;
   final int index;
-  final String fcmToken;
+  final String? fcmToken;
   DetalhesScreen(this.string1,this.imageUrl,this.index,this.fcmToken);
 
   @override
@@ -775,7 +822,7 @@ class DetalhesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalhes'),
-       backgroundColor: const Color.fromARGB(255, 255, 140, 0),
+        backgroundColor: const Color.fromARGB(255, 255, 140, 0),
       ),
       body: Center(
         child: Column(
@@ -794,6 +841,7 @@ class DetalhesScreen extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
+                Globals.token = fcmToken;
                 print("fcmToken: ${fcmToken}");
                 final Map<String, dynamic> requestBody = {
                   'fcmToken':fcmToken ,
@@ -804,8 +852,8 @@ class DetalhesScreen extends StatelessWidget {
                 const functionName = 'sendMessageToDentist';
                 callFirestoreFunction(uri, requestBody, functionName);
 
-                Navigator.pop(context);
-                Navigator.pop(context);
+                Navigator.push(context,MaterialPageRoute(builder: (context) => SendMessageStateful()) );
+                //chamar tela de aguardo
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 140, 0),
@@ -817,7 +865,7 @@ class DetalhesScreen extends StatelessWidget {
                 Globals.ids.removeAt(index);
                 Globals.onIdsUpdated!();
                 Navigator.pop(context);
-            },
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 140, 0),
               ),
@@ -883,8 +931,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Tirar uma foto'),
-          backgroundColor: const Color.fromARGB(255, 255, 140, 0),
+        title: const Text('Tirar uma foto'),
+        backgroundColor: const Color.fromARGB(255, 255, 140, 0),
       ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
@@ -978,6 +1026,50 @@ class DisplayImageScreen extends StatelessWidget {
 
               },
               child: const Text('Tirar outra foto'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class SendMessageStateful extends StatefulWidget {
+  @override
+  _SendMessageStatefulState createState() => _SendMessageStatefulState();
+}
+
+class _SendMessageStatefulState extends State<SendMessageStateful> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text('Atendimento em andamento'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Aguarde ligação do dentista'),
+            SizedBox(height: 20),
+            ElevatedButton(
+              child: Text(
+                'Enviar Localização',
+                style: TextStyle(fontSize: 18),
+              ),
+              onPressed: () async{
+                final Map<String, dynamic> requestBody = {
+                  'latitude' : Globals.latitude.toString(),
+                  'longitude': Globals.longitude.toString(),
+                  'fcmToken': Globals.token,
+                };
+                print("latitude ${Globals.latitude} , longitude ${Globals.longitude} , fcmtoken${Globals.token}");
+                print(requestBody);
+                final uri = Uri.parse('https://southamerica-east1-teethkids-d10a1.cloudfunctions.net/sendLocation');
+                const functionName = 'sendLocation';
+                await callFirestoreFunction(uri, requestBody,functionName);
+              },
             ),
           ],
         ),
