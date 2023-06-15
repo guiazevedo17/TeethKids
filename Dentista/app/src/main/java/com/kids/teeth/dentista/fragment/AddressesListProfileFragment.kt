@@ -121,7 +121,6 @@ class AddressesListProfileFragment : Fragment() {
                     }
 
                 }
-                // notificamos que o adapter foi alterado. Com isso recyclerview atualizará os dados
             }
             .addOnFailureListener { exception ->
                 Log.w("AddressesList", "Error getting documents $exception")

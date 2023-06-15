@@ -5,6 +5,6 @@ class Feedback(
     val name: String? = null,
     val date: String? = null,
     val comment: String? = null,
-    val rating: Double? = null
+    val rating: Number? = null
 ) {
 }

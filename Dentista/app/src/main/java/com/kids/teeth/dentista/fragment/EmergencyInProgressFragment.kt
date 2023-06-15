@@ -1,5 +1,6 @@
 package com.kids.teeth.dentista.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,7 +10,15 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
@@ -35,6 +44,11 @@ class EmergencyInProgressFragment : Fragment() {
     private lateinit var functions: FirebaseFunctions
 
     private lateinit var fcmToken:String
+
+    private var currentLatLng: LatLng? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +79,62 @@ class EmergencyInProgressFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         getEmergencyInfo()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        locationRequest = LocationRequest.create()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.interval = 10000
+
+        binding.btnSendLocation.setOnClickListener {
+
+            val uid = auth.currentUser?.uid
+            locationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult?) {
+                    locationResult?.lastLocation?.let { location ->
+                        currentLatLng = LatLng(location.latitude, location.longitude)
+                        currentLatLng = LatLng(location.latitude, location.longitude)
+                        val latitude = location.latitude
+                        val longitude = location.longitude
+                        val latLng = currentLatLng
+
+                        val LatLng = hashMapOf(
+                            "latitude" to latitude,
+                            "longitude" to longitude
+                        )
+
+                        Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
+                            if (!task.isSuccessful) {
+                                return@OnCompleteListener
+                            }
+                            // guardar esse token.
+                             fcmToken = task.result
+
+
+                        })
+
+                        val hashMap = hashMapOf(
+                            "latLng" to LatLng,
+                            "fcmToken" to fcmToken
+                        )
+
+                        functions.getHttpsCallable("sendLocation")
+                            .call(hashMap)
+                            .addOnSuccessListener { result ->
+                                val resposta: String = result.data.toString()
+                                Log.d("setUserResult", "Result : ${resposta}")
+                                val snackbar = Snackbar.make(view, "Localização Enviada com Sucesso!", Snackbar.LENGTH_SHORT)
+                                snackbar.setBackgroundTint(Color.BLUE)
+                                snackbar.show()
+                            }.addOnFailureListener { exception ->
+                                val snackbar = Snackbar.make(view, "Não foi Possivel Enviar sua Localização!", Snackbar.LENGTH_SHORT)
+                                snackbar.setBackgroundTint(Color.RED)
+                                snackbar.show()
+                            }
+
+                    }
+                }
+            }
+
+        }
 
         binding.btnConcludeEmergency.setOnClickListener {
             val msgType = "rating"

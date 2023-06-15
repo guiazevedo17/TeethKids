@@ -178,10 +178,6 @@ class ProfileFragment : Fragment() {
         binding.btnReputationProfile.setOnClickListener { // Minha Reputação
             findNavController().navigate(R.id.action_ProfileFragment_to_ReputationFragment)
         }
-
-        binding.btnLocale.setOnClickListener {
-            findNavController().navigate(R.id.action_ProfileFragment_to_MapsFragment)
-        }
     }
 
 
