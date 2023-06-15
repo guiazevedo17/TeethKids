@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvAddress"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    android:clickable="true"
+    android:foreground="?selectableItemBackground"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="3dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tk_grey">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivFeedbackLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginStart="15dp"
+            android:src="@drawable/ic_feedback"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvRequesterName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvRequesterName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/feedbacks"
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:textColor="@color/tk_blue"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivFeedbackLogo"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvFeedbackData"
+            android:layout_marginTop="5dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tk_blue"
+            android:textSize="15sp"
+            android:text="14/06/2023"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/tvRequesterName"
+            app:layout_constraintStart_toStartOf="@id/tvRequesterName"
+            app:layout_constraintEnd_toEndOf="@id/tvRequesterName"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvFeedbackComment"
+            android:layout_width="0dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@id/tvRequesterName"
+            app:layout_constraintEnd_toEndOf="@id/tvRequesterName"
+            app:layout_constraintTop_toBottomOf="@id/tvFeedbackData"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="10dp"
+            android:text="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>
