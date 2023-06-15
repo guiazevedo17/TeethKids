@@ -84,14 +84,11 @@ class EmergencyDetailFragment : Fragment() {
 
                 registerActionedEmergency(emergencyId as String, currentUser.uid, "accepted")
 
-                findNavController().navigate(R.id.action_EmergencyDetailFragment_to_EmergenciesListFragment)
             }
 
             binding.btnDeclineEmergency.setOnClickListener {
 
                 registerActionedEmergency(emergencyId as String, currentUser.uid, "declined")
-
-                findNavController().navigate(R.id.action_EmergencyDetailFragment_to_EmergenciesListFragment)
             }
         }
 
@@ -108,13 +105,19 @@ class EmergencyDetailFragment : Fragment() {
         )
 
 
-        db.collection
+        //db.collection
+
+        binding.pbLoading.visibility = View.VISIBLE
 
         functions.getHttpsCallable("setActions")
             .call(emergency)
+            .addOnCompleteListener {
+                binding.pbLoading.visibility = View.GONE
+            }
             .addOnSuccessListener { result ->
                 val resposta = result.data.toString()
                 Log.d("registerActionedEmergency", "Result : ${resposta}")
+                findNavController().navigate(R.id.action_EmergencyDetailFragment_to_EmergenciesListFragment)
             }
 
         sendMessage()

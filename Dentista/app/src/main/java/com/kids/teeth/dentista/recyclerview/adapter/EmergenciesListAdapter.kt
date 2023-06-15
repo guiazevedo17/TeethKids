@@ -11,10 +11,14 @@ import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.model.Emergency
 import java.util.Locale
 
-class EmergenciesListAdapter(private val dataSet: List<Emergency>) :
+class EmergenciesListAdapter(private var dataSet: List<Emergency>) :
     ListAdapter<Emergency, EmergenciesListAdapter.EmergencyViewHolder>(EmergencyDiffCallback) {
 
     var onItemClick : ((Emergency) -> Unit)? = null
+
+    fun updateDataSet(dataSet: List<Emergency>) {
+        this.dataSet = dataSet
+    }
 
     class EmergencyViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {

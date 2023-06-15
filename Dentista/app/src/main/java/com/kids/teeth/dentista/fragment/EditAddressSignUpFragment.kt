@@ -42,9 +42,15 @@ class EditAddressSignUpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val args = this.arguments
-        val addressName = args?.getString("name")
 
-        binding.etName.text = addressName as Editable?
+        binding.etName.setText(args?.getString("name"))
+        binding.etPostalCode.setText(args?.getString("code"))
+        binding.etStreet.setText(args?.getString("street"))
+        binding.etNumber.setText(args?.getString("number"))
+        binding.etComplement.setText(args?.getString("complement"))
+        binding.etNeighborhood.setText(args?.getString("neighborhood"))
+        binding.etCity.setText(args?.getString("city"))
+        binding.etState.setText(args?.getString("state"))
 
         binding.btnCancelEditAddressSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_AddressRegisterProfileFragment_to_AddressesListProfileFragment)
@@ -53,6 +59,7 @@ class EditAddressSignUpFragment : Fragment() {
         binding.btnConcludeEditAddressSignUp.setOnClickListener {
 
             val newAddress = createAddress() // Passar para Update
+
 
 
         }

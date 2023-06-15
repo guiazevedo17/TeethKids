@@ -32,10 +32,6 @@ class EmergenciesListFragment : Fragment() {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
 
-    val avaiableEmergencies = ArrayList<Emergency>()
-    val actionedEmergencies = ArrayList<Action>()
-    val emergencies = ArrayList<Emergency>()
-
     val avaiable = ArrayList<String>()
     val actioned = ArrayList<String>()
 
@@ -62,9 +58,12 @@ class EmergenciesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = EmergenciesListAdapter(avaiableEmergencies)
+        adapter = EmergenciesListAdapter(ArrayList())
 
-        generateEmergenciesList()
+        db = FirebaseFirestore.getInstance(Firebase.app)
+        auth = FirebaseAuth.getInstance(Firebase.app)
+        updateEmergenciesList()
+        setRecyclerView()
 
         binding.btnBackEmergenciesList.setOnClickListener {
             findNavController().navigate(R.id.action_EmergenciesListFragment_to_ProfileFragment)
@@ -93,16 +92,19 @@ class EmergenciesListFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
+
+        updateEmergenciesList()
     }
 
-    private fun generateEmergenciesList() {
-        db = FirebaseFirestore.getInstance(Firebase.app)
-        auth = FirebaseAuth.getInstance(Firebase.app)
-
+    private fun updateEmergenciesList() {
         var emergency:Emergency
         var actions: Action
+
+        var avaiableEmergencies = ArrayList<Emergency>()
+        val actionedEmergencies = ArrayList<Action>()
+        var emergencies = ArrayList<Emergency>()
 
         Log.w("EmergenciesList","auth -  ${auth.currentUser?.uid}")
 
@@ -113,91 +115,182 @@ class EmergenciesListFragment : Fragment() {
 
         Tasks.whenAllSuccess<QuerySnapshot>(avaiableEmergenciesTask, actionedEmergenciesTask)
             .addOnCompleteListener { tasks ->
-                if (tasks.isSuccessful) {
-                    val avaiableEmergenciesSnapshot = tasks.result[0] as QuerySnapshot
-                    val actionedEmergenciesSnapshot = tasks.result[1] as QuerySnapshot
+                if (!tasks.isSuccessful) return@addOnCompleteListener
 
-                    for (document in avaiableEmergenciesSnapshot) {
-                        // process avaiableEmergencies
-                        val fcmToken = document.data["fcmToken"] as? String
-                        val id = document.data["userId"] as? String
+                val avaiableEmergenciesSnapshot = tasks.result[0] as QuerySnapshot
+                val actionedEmergenciesSnapshot = tasks.result[1] as QuerySnapshot
 
-                        val name = document.data["name"] as? String
-                        val phone = document.data["phone"] as? String
+                for (document in avaiableEmergenciesSnapshot) {
+                    // process avaiableEmergencies
+                    val fcmToken = document.data["fcmToken"] as? String
+                    val id = document.data["userId"] as? String
 
-                        val images = document.data["images"] as? ArrayList<String>
+                    val name = document.data["name"] as? String
+                    val phone = document.data["phone"] as? String
 
-                        val timestamp = document.data["data"] as? com.google.firebase.Timestamp
-                        val date = timestamp?.toDate()
+                    val images = document.data["images"] as? ArrayList<String>
 
-                        if (fcmToken != null && id != null && name != null && phone != null && date != null && images != null) {
-                            val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
-                            val formattedDate = sdf.format(date)
+                    val timestamp = document.data["data"] as? com.google.firebase.Timestamp
+                    val date = timestamp?.toDate()
 
-                            emergency = Emergency(fcmToken, id, name, phone, formattedDate, images)
+                    if (fcmToken != null && id != null && name != null && phone != null && date != null && images != null) {
+                        val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
+                        val formattedDate = sdf.format(date)
 
-                            avaiableEmergencies.add(emergency)
+                        emergency = Emergency(fcmToken, id, name, phone, formattedDate, images)
 
-                            Log.w(
-                                "EmergenciesList",
-                                "loadAvaiableEmergenciesFirestore $avaiableEmergencies"
-                            )
+                        emergencies.add(emergency)
 
-                        } else {
-                            Log.w(
-                                "EmergenciesList",
-                                "Some fields are null: name=$name, phone=$phone, date=$date, images=$images"
-                            )
-                        }
+                        Log.w(
+                            "EmergenciesList",
+                            "loadAvaiableEmergenciesFirestore $avaiableEmergencies"
+                        )
+
+                    } else {
+                        Log.w(
+                            "EmergenciesList",
+                            "Some fields are null: name=$name, phone=$phone, date=$date, images=$images"
+                        )
                     }
-
-                    for (document in actionedEmergenciesSnapshot) {
-                        // process actionedEmergencies
-                        val dentistId = document.data["dentistId"] as? String
-                        val emergencyId = document.data["emergencyId"] as? String
-                        val action = document.data["action"] as? String
-
-                        if (dentistId != null && emergencyId != null && action != null) {
-
-                            actions = Action(dentistId, emergencyId, action)
-
-                            actionedEmergencies.add(actions)
-                            Log.w(
-                                "EmergenciesList",
-                                "loadActionedEmergenciesFirestore $actionedEmergencies"
-                            )
-                        } else {
-                            Log.w(
-                                "EmergenciesList",
-                                "Some fields are null: dentistId=$dentistId, emergencyId=$emergencyId, action=$action"
-                            )
-                        }
-                    }
-
-
-
-                    // Compare and set up RecyclerView
-                    if (avaiableEmergencies.isNotEmpty()) {
-                        if (actionedEmergencies.isNotEmpty()) {
-                            val list = avaiableEmergencies.filter { emerg ->
-                                actionedEmergencies.none { action ->
-                                    emerg.id == action.emergencyId
-                                }
-                            }
-                            emergencies.addAll(list)
-                            adapter = EmergenciesListAdapter(emergencies)
-                        } else {
-                            adapter = EmergenciesListAdapter(avaiableEmergencies)
-                        }
-                        setRecyclerView()
-                    }
-
-
-                    // Refresh RecyclerView
-                    adapter.notifyDataSetChanged()
-                } else {
-                    Log.w("EmergenciesList", "Error getting documents", tasks.exception)
                 }
+
+                for (document in actionedEmergenciesSnapshot) {
+                    // process actionedEmergencies
+                    val dentistId = document.data["dentistId"] as? String
+                    val emergencyId = document.data["emergencyId"] as? String
+                    val action = document.data["action"] as? String
+
+                    if (dentistId != null && emergencyId != null && action != null) {
+
+                        actions = Action(dentistId, emergencyId, action)
+
+                        actionedEmergencies.add(actions)
+                        Log.w(
+                            "EmergenciesList",
+                            "loadActionedEmergenciesFirestore $actionedEmergencies"
+                        )
+                    } else {
+                        Log.w(
+                            "EmergenciesList",
+                            "Some fields are null: dentistId=$dentistId, emergencyId=$emergencyId, action=$action"
+                        )
+                    }
+                }
+
+                // Compare and set up RecyclerVie
+                //A = [{id: 3}]
+                //B = [1, 2]
+                val actionEmergenciesIds = actionedEmergencies.map { actionedEmergency ->  actionedEmergency.emergencyId }
+
+                avaiableEmergencies = emergencies.filter { emergency -> !actionEmergenciesIds.contains(emergency.id) } as ArrayList<Emergency>
+
+                adapter.updateDataSet(avaiableEmergencies)
+                adapter.notifyDataSetChanged()
+
+//                if (avaiableEmergencies.isNotEmpty()) {
+//                    if (actionedEmergencies.isNotEmpty()) {
+//                        val list = avaiableEmergencies.filter { emerg ->
+//                            actionedEmergencies.none { action ->
+//                                emerg.id == action.emergencyId
+//                            }
+//                        }
+//                        emergencies.addAll(list)
+//                        adapter = EmergenciesListAdapter(emergencies)
+//                    } else {
+//                        adapter = EmergenciesListAdapter(avaiableEmergencies)
+//                    }
+//                    //setRecyclerView()
+//                }
+
+
+                // Refresh RecyclerView
+                //adapter.notifyDataSetChanged()
+
+//                if (tasks.isSuccessful) {
+//                    val avaiableEmergenciesSnapshot = tasks.result[0] as QuerySnapshot
+//                    val actionedEmergenciesSnapshot = tasks.result[1] as QuerySnapshot
+//
+//                    for (document in avaiableEmergenciesSnapshot) {
+//                        // process avaiableEmergencies
+//                        val fcmToken = document.data["fcmToken"] as? String
+//                        val id = document.data["userId"] as? String
+//
+//                        val name = document.data["name"] as? String
+//                        val phone = document.data["phone"] as? String
+//
+//                        val images = document.data["images"] as? ArrayList<String>
+//
+//                        val timestamp = document.data["data"] as? com.google.firebase.Timestamp
+//                        val date = timestamp?.toDate()
+//
+//                        if (fcmToken != null && id != null && name != null && phone != null && date != null && images != null) {
+//                            val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
+//                            val formattedDate = sdf.format(date)
+//
+//                            emergency = Emergency(fcmToken, id, name, phone, formattedDate, images)
+//
+//                            avaiableEmergencies.add(emergency)
+//
+//                            Log.w(
+//                                "EmergenciesList",
+//                                "loadAvaiableEmergenciesFirestore $avaiableEmergencies"
+//                            )
+//
+//                        } else {
+//                            Log.w(
+//                                "EmergenciesList",
+//                                "Some fields are null: name=$name, phone=$phone, date=$date, images=$images"
+//                            )
+//                        }
+//                    }
+//
+//                    for (document in actionedEmergenciesSnapshot) {
+//                        // process actionedEmergencies
+//                        val dentistId = document.data["dentistId"] as? String
+//                        val emergencyId = document.data["emergencyId"] as? String
+//                        val action = document.data["action"] as? String
+//
+//                        if (dentistId != null && emergencyId != null && action != null) {
+//
+//                            actions = Action(dentistId, emergencyId, action)
+//
+//                            actionedEmergencies.add(actions)
+//                            Log.w(
+//                                "EmergenciesList",
+//                                "loadActionedEmergenciesFirestore $actionedEmergencies"
+//                            )
+//                        } else {
+//                            Log.w(
+//                                "EmergenciesList",
+//                                "Some fields are null: dentistId=$dentistId, emergencyId=$emergencyId, action=$action"
+//                            )
+//                        }
+//                    }
+//
+//
+//
+//                    // Compare and set up RecyclerView
+//                    if (avaiableEmergencies.isNotEmpty()) {
+//                        if (actionedEmergencies.isNotEmpty()) {
+//                            val list = avaiableEmergencies.filter { emerg ->
+//                                actionedEmergencies.none { action ->
+//                                    emerg.id == action.emergencyId
+//                                }
+//                            }
+//                            emergencies.addAll(list)
+//                            adapter = EmergenciesListAdapter(emergencies)
+//                        } else {
+//                            adapter = EmergenciesListAdapter(avaiableEmergencies)
+//                        }
+//                        setRecyclerView()
+//                    }
+//
+//
+//                    // Refresh RecyclerView
+//                    adapter.notifyDataSetChanged()
+//                } else {
+//                    Log.w("EmergenciesList", "Error getting documents", tasks.exception)
+//                }
             }
     }
 

@@ -48,23 +48,32 @@ class AddressesListSignUpFragment : Fragment() {
 
         addresses = AddressesDao.searchAll() as ArrayList<Address>
         adapter = AddressesListAdapter(addresses)
+        recyclerView = binding.rvAddressList
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter.onItemClick = { address ->
+            val index = adapter.getItemIndex(address)
+
+            val bundle = Bundle().apply {
+                putString("name", address.name)
+                putString("code", address.code)
+                putString("street", address.street)
+                putString("number", address.number)
+                putString("complement", address.complement)
+                putString("neighborhood", address.neighborhood)
+                putString("city", address.city)
+                putString("state", address.state)
+
+                putInt("index", index)
+            }
+
+            findNavController().navigate(R.id.action_AddressesListSignUpFragment_to_EditAddressSignUpFragment, bundle)
+        }
 
         if (adapter.itemCount == 3)
             binding.fabAddAddress.visibility = View.GONE
 
-        if (addresses.isNotEmpty()){
-            recyclerView = binding.rvAddressList
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-            adapter.onItemClick = { address ->
-                val bundle = Bundle().apply {
-                    putString("name", address.name)
-                }
-                Log.i("AddressesListSignUp", "addressName = ${address.name}")
-                findNavController().navigate(R.id.action_AddressesListSignUpFragment_to_EditAddressSignUpFragment, bundle)
-            }
-        }
 
         Toast.makeText(requireContext(),"AddressListFragment onViewCreated() | Lista: ${AddressesDao.searchAll()}", Toast.LENGTH_LONG).show()
 

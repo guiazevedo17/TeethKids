@@ -35,9 +35,16 @@ class AddressesListAdapter(private val dataSet: List<Address>
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
         val a = dataSet[position]
         holder.bind(a)
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(a)
+        }
     }
 
     override fun getItemCount(): Int = dataSet.size
+
+    fun getItemIndex(address: Address): Int = dataSet.indexOf(address)
+
+
 }
 
 object AddressDiffCallBack : DiffUtil.ItemCallback<Address>() {
