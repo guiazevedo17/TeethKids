@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#FFFFFF" /> <!-- Cor de fundo do círculo -->
-    <corners android:radius="75dp" /> <!-- Raio do círculo, metade da largura/altura do ImageView -->
-</shape>
