@@ -207,9 +207,9 @@ export const sendLocation = functions
   .runWith({enforceAppCheck: false})
   .https
   .onCall(async (data, context)=>{
-    const latitude = data.latLng.latitude;
-    const longitude = data.latLng.longitude;
-    const fcmToken = data.fcmToken;
+    const latitude = data["latitude"]
+    const longitude = data["longitude"];
+    const fcmToken = data["fcmToken"];
     const text = "location";
 
     const message = {
