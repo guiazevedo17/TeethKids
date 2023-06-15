@@ -1,0 +1,19 @@
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\n    id 'com.android.application'\n    id 'org.jetbrains.kotlin.android'\n    id 'com.google.gms.google-services'\n    id (\"androidx.navigation.safeargs\")\n    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'\n}\n\nandroid {\n    namespace 'com.kids.teeth.dentista'\n    compileSdk 33\n\n    defaultConfig {\n        applicationId \"com.kids.teeth.dentista\"\n        minSdk 29\n        targetSdk 33\n        versionCode 1\n        versionName \"1.0\"\n\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\n    }\n\n    buildTypes {\n        release {\n            minifyEnabled false\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\n        }\n    }\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_1_8\n        targetCompatibility JavaVersion.VERSION_1_8\n    }\n    kotlinOptions {\n        jvmTarget = '1.8'\n    }\n\n    buildFeatures {\n        viewBinding = true\n    }\n}\n\ndependencies {\n    //dependencias da camera\n    implementation 'androidx.camera:camera-camera2:1.2.3'\n    implementation 'androidx.camera:camera-lifecycle:1.2.3'\n    implementation 'androidx.camera:camera-view:1.2.3'\n\n    implementation platform('com.google.firebase:firebase-bom:32.0.0')\n\n    implementation 'androidx.core:core-ktx:1.7.0'\n    implementation 'com.google.firebase:firebase-storage:20.2.0'\n    implementation 'androidx.appcompat:appcompat:1.6.1'\n    implementation 'com.google.android.material:material:1.8.0'\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\n    implementation 'com.google.firebase:firebase-firestore-ktx'\n    implementation 'com.google.firebase:firebase-analytics-ktx'\n    implementation 'androidx.navigation:navigation-fragment:2.5.3' // Atualizada para a versão 2.5.3\n    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'\n    implementation 'com.google.firebase:firebase-auth-ktx'\n    implementation 'com.google.firebase:firebase-messaging-ktx'\n    implementation 'com.google.firebase:firebase-functions-ktx'\n    implementation 'com.google.firebase:firebase-storage-ktx'\n    implementation 'com.firebaseui:firebase-ui-storage:8.0.0'\n    testImplementation 'junit:junit:4.13.2'\n    androidTestImplementation 'androidx.test.ext:junit:1.1.5'\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'\n\n    implementation 'com.github.bumptech.glide:glide:4.12.0'\n\n    implementation 'androidx.activity:activity-ktx:1.4.0'\n    implementation 'androidx.fragment:fragment-ktx:1.4.0'\n\n    implementation 'com.google.android.gms:play-services-maps:17.0.0'\n    implementation 'com.google.android.gms:play-services-location:18.0.0'\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision 777197bf8742580c0920eab3270cdfcacf7aa854)
++++ b/app/build.gradle	(date 1686784043775)
+@@ -54,7 +54,7 @@
+     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+     implementation 'com.google.firebase:firebase-firestore-ktx'
+     implementation 'com.google.firebase:firebase-analytics-ktx'
+-    implementation 'androidx.navigation:navigation-fragment:2.5.3' // Atualizada para a versão 2.5.3
++    implementation 'androidx.navigation:navigation-fragment:2.5.3'
+     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+     implementation 'com.google.firebase:firebase-auth-ktx'
+     implementation 'com.google.firebase:firebase-messaging-ktx'
