@@ -23,6 +23,8 @@ class DefaultMessageService : FirebaseMessagingService() {
 
     companion object {
         var docID: String? = null
+        var latitude: String? = null
+        var longitude: String? = null
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -41,6 +43,12 @@ class DefaultMessageService : FirebaseMessagingService() {
             showNotificationEmergencyInProgress(msg)
         }
 
+        if(msgData["text"] == "location"){
+            latitude = msgData["latitude"]
+            longitude = msgData["longitude"]
+            val msg = "Socorrista compartilhou a localização com voce!"
+            showNotificationLocation(msg)
+        }
     }
 
     override fun onNewToken(token: String) {
@@ -103,4 +111,29 @@ class DefaultMessageService : FirebaseMessagingService() {
         notificationManager.createNotificationChannel(channel)
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
     }
+
+    private fun showNotificationLocation(messageBody: String) {
+        val intent = Intent(this, SignInActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.action = "OPEN_FRAGMENT_MAPS"
+        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+            PendingIntent.FLAG_IMMUTABLE)
+        val channelId = getString(R.string.default_notification_channel_id)
+        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.logo)
+            .setContentTitle(getString(R.string.fcm_default_title_message))
+            .setContentText(messageBody)
+            .setAutoCancel(true)
+            .setSound(defaultSoundUri)
+            .setContentIntent(pendingIntent)
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        // Since android Oreo notification channel is needed.
+        val channel = NotificationChannel(channelId,
+            "Channel human readable title",
+            NotificationManager.IMPORTANCE_DEFAULT)
+        notificationManager.createNotificationChannel(channel)
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+    }
+
 }

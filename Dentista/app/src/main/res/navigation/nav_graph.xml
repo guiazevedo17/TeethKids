@@ -275,10 +275,15 @@
 
     <!--Localização -->
     <fragment
-        android:id="@+id/map_fragment"
+        android:id="@+id/MapFragment"
         android:name="com.kids.teeth.dentista.fragment.MapsFragment"
         android:label="Localização"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps">
+
+        <action
+            android:id="@+id/action_MapFragment_to_EmergencyInProgress"
+            app:destination="@+id/EmergencyInProgressFragment"/>
+    </fragment>
 
 </navigation>
 

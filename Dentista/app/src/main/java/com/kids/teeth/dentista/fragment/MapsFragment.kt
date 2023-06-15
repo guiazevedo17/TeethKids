@@ -8,15 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.databinding.FragmentMapsBinding
+import com.kids.teeth.dentista.messaging.DefaultMessageService
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentMapsBinding? = null
@@ -60,19 +65,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             mapFragment.getMapAsync(this)
         }
 
-        binding.btnSendLatLng.setOnClickListener {
-            val uid = auth.currentUser?.uid
-            val latLng = currentLatLng
-            if (uid != null && latLng != null) {
-                db.collection("dentists").document(uid)
-                    .update("latLng", latLng)
-                    .addOnSuccessListener {
-                        // Atualização bem-sucedida
-                    }
-                    .addOnFailureListener { e ->
-                        // Tratamento de falha na atualização
-                    }
-            }
+        binding.btnCancelMapFragment.setOnClickListener {
+            findNavController().navigate(R.id.action_MapFragment_to_EmergencyInProgress)
         }
     }
 
@@ -85,8 +79,21 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         } else {
             requestLocationPermission()
         }
+        val latitudeStr = DefaultMessageService.latitude
+        val longitudeStr = DefaultMessageService.longitude
+        val latitude = latitudeStr?.toDouble()
+        val longitude = longitudeStr?.toDouble()
+        if (latitude != null) {
+            if (longitude != null) {
+                addMarkerToMap(latitude, longitude)
+            }
+        }
     }
-
+    private fun addMarkerToMap(latitude: Double, longitude: Double) {
+        val markerLatLng = LatLng(latitude, longitude)
+        val markerOptions = MarkerOptions().position(markerLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+        map.addMarker(markerOptions)
+    }
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireContext(),
@@ -142,6 +149,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     }
 
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 }

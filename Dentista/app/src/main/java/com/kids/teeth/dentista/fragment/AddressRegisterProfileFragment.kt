@@ -49,6 +49,8 @@ class AddressRegisterProfileFragment : Fragment() {
             val newAddress = createAddress()
             registerAddress(newAddress)
             clearFields()
+
+            findNavController().navigate(R.id.action_AddressRegisterProfileFragment_to_AddressesListProfileFragment)
         }
     }
 

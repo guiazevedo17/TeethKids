@@ -53,9 +53,9 @@ class AddressesListProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadAddressesFirestore()
+        adapter = AddressesListAdapter(ArrayList())
 
-        adapter = AddressesListAdapter(addresses)
+        loadAddressesFirestore()
 
         if (adapter.itemCount == 3)
             binding.fabAddAddress.visibility = View.GONE
@@ -121,11 +121,10 @@ class AddressesListProfileFragment : Fragment() {
                     }
 
                 }
+                adapter.updateDataSet(addresses)
             }
             .addOnFailureListener { exception ->
                 Log.w("AddressesList", "Error getting documents $exception")
             }
     }
-
-
 }

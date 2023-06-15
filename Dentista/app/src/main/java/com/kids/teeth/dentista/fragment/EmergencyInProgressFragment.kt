@@ -1,5 +1,7 @@
 package com.kids.teeth.dentista.fragment
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -43,12 +46,14 @@ class EmergencyInProgressFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var functions: FirebaseFunctions
 
-    private lateinit var fcmToken:String
+    private lateinit var fcmToken: String
 
     private var currentLatLng: LatLng? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
+
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,12 +64,7 @@ class EmergencyInProgressFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEmergencyInProgressBinding
-            .inflate(
-                inflater,
-                container,
-                false
-            )
+        _binding = FragmentEmergencyInProgressBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -94,52 +94,46 @@ class EmergencyInProgressFragment : Fragment() {
                         currentLatLng = LatLng(location.latitude, location.longitude)
                         val latitude = location.latitude
                         val longitude = location.longitude
-                        val latLng = currentLatLng
-
-                        val LatLng = hashMapOf(
-                            "latitude" to latitude,
-                            "longitude" to longitude
-                        )
+                        val latitudeStr = latitude.toString()
+                        val longitudeStr = longitude.toString()
 
                         Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
                             if (!task.isSuccessful) {
                                 return@OnCompleteListener
                             }
                             // guardar esse token.
-                             fcmToken = task.result
+                            fcmToken = task.result
 
+                            val hashMap = hashMapOf(
+                                "latitude" to latitudeStr,
+                                "longitude" to longitudeStr,
+                                "fcmToken" to fcmToken
+                            )
 
+                            functions.getHttpsCallable("sendLocation")
+                                .call(hashMap)
+                                .addOnSuccessListener { result ->
+                                    val resposta: String = result.data.toString()
+                                    //Log.d("setUserResult", "Result : ${resposta}")
+                                    val snackbar = Snackbar.make(view, "Localização Enviada com Sucesso!", Snackbar.LENGTH_SHORT)
+                                    snackbar.setBackgroundTint(Color.BLUE)
+                                    snackbar.show()
+                                }.addOnFailureListener { exception ->
+                                    val snackbar = Snackbar.make(view, "Não foi Possivel Enviar sua Localização!", Snackbar.LENGTH_SHORT)
+                                    snackbar.setBackgroundTint(Color.RED)
+                                    snackbar.show()
+                                }
                         })
-
-                        val hashMap = hashMapOf(
-                            "latLng" to LatLng,
-                            "fcmToken" to fcmToken
-                        )
-
-                        functions.getHttpsCallable("sendLocation")
-                            .call(hashMap)
-                            .addOnSuccessListener { result ->
-                                val resposta: String = result.data.toString()
-                                Log.d("setUserResult", "Result : ${resposta}")
-                                val snackbar = Snackbar.make(view, "Localização Enviada com Sucesso!", Snackbar.LENGTH_SHORT)
-                                snackbar.setBackgroundTint(Color.BLUE)
-                                snackbar.show()
-                            }.addOnFailureListener { exception ->
-                                val snackbar = Snackbar.make(view, "Não foi Possivel Enviar sua Localização!", Snackbar.LENGTH_SHORT)
-                                snackbar.setBackgroundTint(Color.RED)
-                                snackbar.show()
-                            }
-
                     }
                 }
             }
 
+            startLocationUpdates()
         }
 
         binding.btnConcludeEmergency.setOnClickListener {
             val msgType = "rating"
             val dentistId = auth.currentUser?.uid
-
 
             val ex = hashMapOf(
                 "fcmToken" to fcmToken,
@@ -155,8 +149,57 @@ class EmergencyInProgressFragment : Fragment() {
                     val resposta: String? = result.data.toString()
                     Log.d("setUserResult", "Result : ${resposta}")
                 }
-
+            
             findNavController().navigate(R.id.action_EmergencyInProgressFragment_to_ProfileFragment)
+        }
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun isLocationPermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestLocationPermission() {
+        requestPermissions(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startLocationUpdates()
+            }
+        }
+    }
+
+    private fun startLocationUpdates() {
+        if (isLocationPermissionGranted()) {
+            try {
+                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -205,6 +248,4 @@ class EmergencyInProgressFragment : Fragment() {
         val capitalizedWords = words.map { it.capitalize(Locale.ROOT) }
         return capitalizedWords.joinToString(" ")
     }
-
-
 }

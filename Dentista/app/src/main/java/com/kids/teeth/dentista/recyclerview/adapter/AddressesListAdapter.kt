@@ -12,10 +12,14 @@ import com.kids.teeth.dentista.R
 import com.kids.teeth.dentista.model.Address
 import com.kids.teeth.dentista.model.Emergency
 
-class AddressesListAdapter(private val dataSet: List<Address>
+class AddressesListAdapter(private var dataSet: List<Address>
     ) : ListAdapter<Address, AddressesListAdapter.AddressViewHolder>(AddressDiffCallBack) {
 
     var onItemClick : ((Address) -> Unit)? = null
+
+    fun updateDataSet(dataSet: List<Address>) {
+        this.dataSet = dataSet
+    }
 
     class AddressViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val name : AppCompatTextView = view.findViewById(R.id.tvAddressName)
