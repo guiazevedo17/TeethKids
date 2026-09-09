@@ -16,7 +16,7 @@
 
 ## 📸 Preview
 
-As capturas abaixo são do aplicativo **Dentista**, obtidas em um emulador Android 33 com a camada de dados substituída por valores de demonstração — o projeto Firebase original não está mais no ar. O aplicativo **Socorrista** compila, mas não tem capturas nesta versão do README.
+As capturas abaixo foram obtidas com a camada de dados substituída por valores de demonstração — o projeto Firebase original não está mais no ar. As telas do **Dentista** vêm de um emulador Android 33; as do **Socorrista**, do simulador do iPhone 15 (iOS).
 
 ### Dentista
 
@@ -34,7 +34,15 @@ As capturas abaixo são do aplicativo **Dentista**, obtidas em um emulador Andro
 
 ### Socorrista
 
-Sem capturas nesta versão. O código do aplicativo está em `Socorrista/` e as telas implementadas estão listadas em [Arquitetura](#️-arquitetura).
+| Início | Solicitar socorro | Socorro aberto |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/08-socorrista-inicio.png" width="240" alt="Tela inicial do socorrista"> | <img src="docs/screenshots/09-socorrista-solicitar-socorro.png" width="240" alt="Formulário de solicitação de socorro"> | <img src="docs/screenshots/10-socorrista-socorro-aberto.png" width="240" alt="Dentistas que aceitaram o chamado"> |
+
+| Atendimento em andamento | Avaliação |
+| :---: | :---: |
+| <img src="docs/screenshots/11-socorrista-atendimento-andamento.png" width="240" alt="Atendimento em andamento"> | <img src="docs/screenshots/12-socorrista-avaliacao.png" width="240" alt="Avaliação do atendimento"> |
+
+As telas de câmera (`TakePictureScreen`) e de mapa dependem de recursos que o simulador não renderiza e ficaram de fora. O código do aplicativo está em `Socorrista/` e as telas implementadas estão listadas em [Arquitetura](#️-arquitetura).
 
 ---
 

@@ -16,7 +16,7 @@
 
 ## 📸 Preview
 
-The screenshots below are from the **Dentista** app, captured on an Android 33 emulator with the data layer replaced by demo values — the original Firebase project is no longer online. The **Socorrista** app builds, but has no screenshots in this version of the README.
+The screenshots below were captured with the data layer replaced by demo values — the original Firebase project is no longer online. The **Dentista** screens come from an Android 33 emulator; the **Socorrista** ones from the iPhone 15 simulator (iOS).
 
 ### Dentista
 
@@ -34,7 +34,15 @@ The screenshots below are from the **Dentista** app, captured on an Android 33 e
 
 ### Socorrista
 
-No screenshots in this version. The app's code lives in `Socorrista/`, and the implemented screens are listed under [Architecture](#️-architecture).
+| Home | Request help | Open call |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/08-socorrista-inicio.png" width="240" alt="Requester home screen"> | <img src="docs/screenshots/09-socorrista-solicitar-socorro.png" width="240" alt="Help request form"> | <img src="docs/screenshots/10-socorrista-socorro-aberto.png" width="240" alt="Dentists who accepted the call"> |
+
+| Appointment in progress | Rating |
+| :---: | :---: |
+| <img src="docs/screenshots/11-socorrista-atendimento-andamento.png" width="240" alt="Appointment in progress"> | <img src="docs/screenshots/12-socorrista-avaliacao.png" width="240" alt="Rating the appointment"> |
+
+The camera (`TakePictureScreen`) and map screens rely on features the simulator does not render, so they were left out. The app's code lives in `Socorrista/`, and the implemented screens are listed under [Architecture](#️-architecture).
 
 ---
 
