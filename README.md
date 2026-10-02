@@ -58,6 +58,30 @@ Registro aqui o que o repositório realmente é, incluindo as decisões de organ
 
 ---
 
+## 🔐 Incidente de segurança e aprendizado
+
+Em setembro de 2026, a reorganização deste repositório para uso no meu portfólio trouxe um projeto acadêmico antigo novamente à minha atenção — e levantou a hipótese de também ter renovado sua visibilidade para varreduras automatizadas. Pouco depois, identifiquei uma cobrança de aproximadamente **R$ 450** no Google Cloud vinculada ao projeto original do TeethKids.
+
+A investigação mostrou que duas chaves criadas automaticamente pelo Firebase, identificadas como chaves de Android e iOS, estavam sem qualquer restrição de aplicativo e autorizadas a acessar 63 APIs, incluindo a Places API. Embora tivessem nomes de chaves móveis, podiam ser usadas por qualquer aplicação. O Google registrou 7.316 solicitações à Places API em 30 dias, com chamadas HTTP de `TextSearch`, `Details` e `GetPhoto`; a origem foi classificada como `WEBSERVICE`, com domínio não especificado. Esse padrão não corresponde ao funcionamento dos aplicativos deste repositório.
+
+As métricas registram atividade já em 2–3 de setembro, enquanto os commits públicos de reorganização foram enviados em 7–8 de setembro. Por isso, não é possível afirmar que a atualização do portfólio foi o gatilho exato. Ela pode ter aumentado a exposição, mas a vulnerabilidade existia desde 2023: configurações do Firebase e, no histórico, uma chave usada pelo Maps permaneceram acessíveis em um repositório público. Uma credencial pública, habilitada para APIs faturáveis e sem restrições adequadas, podia ser coletada e reutilizada por bots a qualquer momento.
+
+O incidente foi contido com a exclusão individual de todas as credenciais, o encerramento da conta relacionada e a exclusão do projeto no Google Cloud. Os valores antigos eventualmente encontrados neste repositório ou em seu histórico não devem ser considerados credenciais válidas.
+
+### O que aprendi
+
+- Um projeto arquivado continua sendo uma superfície de ataque enquanto credenciais, APIs e faturamento permanecerem ativos.
+- Uma chave presente em configuração cliente do Firebase não deve receber acesso amplo a APIs faturáveis. Cada finalidade precisa de uma chave separada, com privilégio mínimo.
+- Chaves Android devem ser limitadas pelo package name e certificado; chaves iOS, pelo bundle identifier; chaves web, por referenciadores; e chamadas de servidor, por identidade ou IP controlado.
+- “Sem custo” não significa “sem risco”: créditos, franquias ou baixo uso podem apenas ocultar a exposição até que alguém gere volume.
+- Remover o segredo da versão atual não basta. O histórico Git, artefatos de build, releases, forks e caches também precisam ser considerados comprometidos.
+- Todo repositório reativado ou tornado público deve passar por varredura de segredos e revisão de recursos externos **antes** do primeiro push.
+- Controles preventivos mínimos incluem secret scanning no pre-commit e na CI, alertas de orçamento e anomalia, cotas conservadoras e revisão periódica de credenciais e projetos inativos.
+
+Este registro não está aqui para esconder o erro, mas para documentá-lo. Conhecer esse tipo de ataque em teoria não impediu que uma decisão antiga e aparentemente inofensiva se transformasse em um incidente real. A responsabilidade profissional está em investigar com honestidade, conter o problema e transformar o prejuízo em um controle que impeça sua repetição.
+
+---
+
 ## 🏗️ Arquitetura
 
 Os dois aplicativos são clientes independentes do mesmo projeto Firebase. Nenhum deles chama o outro: a comunicação acontece através do Firestore e das Cloud Functions, que disparam notificações via FCM para o app do outro lado.

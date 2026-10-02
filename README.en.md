@@ -58,6 +58,30 @@ I am recording here what the repository actually is, including the organisationa
 
 ---
 
+## 🔐 Security incident and lessons learned
+
+In September 2026, reorganising this repository for use in my portfolio brought an old academic project back to my attention — and raised the possibility that it also renewed its visibility to automated scanners. Shortly afterwards, I found an approximately **BRL 450** Google Cloud charge associated with the original TeethKids project.
+
+The investigation found that two keys automatically created by Firebase, identified as Android and iOS keys, had no application restrictions and were allowed to access 63 APIs, including the Places API. Despite their mobile-key names, they could be used by any application. Google recorded 7,316 Places API requests over 30 days, including HTTP `TextSearch`, `Details`, and `GetPhoto` calls; the source was classified as `WEBSERVICE`, with no domain specified. This pattern does not match the behaviour of the applications in this repository.
+
+The metrics show activity as early as September 2–3, while the public reorganisation commits were pushed on September 7–8. It is therefore not possible to claim that the portfolio update was the exact trigger. It may have increased exposure, but the vulnerability had existed since 2023: Firebase configuration and, in Git history, a key used by Maps remained accessible in a public repository. A public credential enabled for billable APIs without adequate restrictions could have been collected and reused by bots at any time.
+
+The incident was contained by individually deleting all credentials, closing the related account, and deleting the Google Cloud project. Any old values still found in this repository or its history must not be treated as valid credentials.
+
+### What I learned
+
+- An archived project remains an attack surface while credentials, APIs, and billing are still active.
+- A key present in Firebase client configuration must not receive broad access to billable APIs. Each purpose needs a separate least-privilege key.
+- Android keys must be restricted by package name and certificate; iOS keys by bundle identifier; web keys by referrer; and server calls by a controlled identity or IP.
+- “No cost” does not mean “no risk”: credits, allowances, or low usage may simply hide the exposure until someone generates volume.
+- Removing a secret from the current revision is not enough. Git history, build artefacts, releases, forks, and caches must also be considered compromised.
+- Every repository being revived or made public must undergo secret scanning and external-resource review **before** the first push.
+- Minimum preventive controls include secret scanning in pre-commit and CI, budget and anomaly alerts, conservative quotas, and periodic reviews of credentials and inactive projects.
+
+This record is not here to hide the mistake, but to document it. Knowing this class of attack in theory did not prevent an old and seemingly harmless decision from becoming a real incident. Professional responsibility means investigating honestly, containing the problem, and turning the loss into a control that prevents recurrence.
+
+---
+
 ## 🏗️ Architecture
 
 The two apps are independent clients of the same Firebase project. Neither calls the other: communication happens through Firestore and the Cloud Functions, which fire FCM notifications to the app on the opposite side.
